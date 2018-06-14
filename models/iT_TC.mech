@@ -31,7 +31,7 @@
 % - Tags: calcium, current, intrinsic, thalamocortical
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Parameters
-gT = 2.5    % mS/cm^2
+gT = 2.2    % mS/cm^2
 vShift = 2  % mV
 % The Q10 temperature adjustment values never change over the course of the
 %     simulations, so we are setting them to be constant.

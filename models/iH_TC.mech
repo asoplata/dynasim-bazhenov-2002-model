@@ -23,7 +23,7 @@
 % - Tags: calcium, current, intrinsic, thalamocortical, slow
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Parameters
-gH = 0.016 % mS/cm^2
+gH = 0.017 % mS/cm^2
 gInc = 2   % unitless
 EH = -40   % mV
 
@@ -42,7 +42,8 @@ OpenLockedHNoiseIC = 0.0
 %     equations easier to calculate (and which is 0). Additionally, even the
 %     variable is originally called `fac_gh_TC`, it does NOT change the
 %     conductance, but instead the position of the activation curve.
-fac_shift_H_TC = -8 % mV
+% fac_shift_H_TC = -8 % mV
+fac_shift_H_TC = -2 % mV
 
 % Note: In the original code, the temperature adjustment factor `Phi` comes out
 %     to be 1, since the temperature is the same as the reference temperature

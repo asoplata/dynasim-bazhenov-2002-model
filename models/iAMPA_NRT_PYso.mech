@@ -47,11 +47,11 @@ beta  = 0.19 % ms^-1
 
 % In the original code, this sleep stage experimental factor is represented by
 %     `fac_AMPA_TC`
-fac_AMPA_NRT_PYso = 0.5
+fac_AMPA_NRT_PYso = 1
 
 % Connective radius, aka how many target cells each source cell connects to,
 %     from the source's perspective.
-radius = 8
+radius = 5
 
 % We also need to normalize the conductance in mS/cm^2 by the number of
 %     connections each target cell is receiving on average, so that the TOTAL sum

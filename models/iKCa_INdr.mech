@@ -26,7 +26,7 @@
 % - Tags: calcium, potassium, current, intrinsic, interneuron, dendrite
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Parameters
-gKCa = 0.05 % mS/cm^2
+gKCa = 0.3 % mS/cm^2
 EKCa = -90  % mV
 % The Q10 temperature adjustment values never change over the course of the
 %     simulations, so we are setting them to be constant.

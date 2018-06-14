@@ -47,14 +47,14 @@ k4 = 0.034    % ms^{-1}
 
 % In the original code, this sleep stage experimental factor is represented by
 %     `fac_GABA_TC`
-fac_GABAB_TC_NRT = 0.55
+fac_GABAB_TC_NRT = 1
 
 % This is our DynaSim-varied, cell-type-NONspecific adjustment factor
 fac_GABA_thal_large_vary = 0
 
 % Connective radius, aka how many target cells each source cell connects to,
 %     from the source's perspective.
-radius = 8
+radius = 5
 
 % We also need to normalize the conductance in mS/cm^2 by the number of
 %     connections each target cell is receiving on average, so that the TOTAL sum

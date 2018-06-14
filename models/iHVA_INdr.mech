@@ -19,7 +19,7 @@
 % - Tags: calcium, current, intrinsic, interneuron, dendrite
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Parameters
-gHVA = 0.012 % mS/cm^2
+gHVA = 0.01 % mS/cm^2
 % In the original code, this is `E_Ca`
 EHVA = 140   % mV
 % The Q10 temperature adjustment values never change over the course of the

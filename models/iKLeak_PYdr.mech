@@ -15,12 +15,12 @@
 % - Tags: potassium, leak, current, intrinsic, pyramidal, dendrite
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Parameters
-gKLeak = 0.011 % mS/cm^2
+gKLeak = 0.0025 % mS/cm^2
 EKLeak = -95    % mV
 
 % In the original code, this sleep stage experimental factor is represented by
 %     `fac_gkl`
-fac_KLeak_PYdr = 0.19
+fac_KLeak_PYdr = 1
 
 % This is our DynaSim-varied, cell-type-NONspecific adjustment factor
 fac_KLeak_cort_large_vary = 0

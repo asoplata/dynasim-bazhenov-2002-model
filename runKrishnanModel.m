@@ -116,9 +116,9 @@ spec = assembleSpecification(dt, numCellsScaledownFactor);
 % %   'REM'. By default, the model is set to 'Awake' conditions.
 % spec = applyExperimentFactors(spec, 'N3');
 
-% Only run this if you do NOT want any noise/randomness in your initial
-%   conditions, which can be useful for reproducibility or debugging.
-spec = removeNoiseIC(spec);
+% % Only run this if you do NOT want any noise/randomness in your initial
+% %   conditions, which can be useful for reproducibility or debugging.
+% spec = removeNoiseIC(spec);
 
 % -------------------------------------------------------------------
 %% 3. Run the simulation
@@ -134,8 +134,8 @@ spec = removeNoiseIC(spec);
     'memory_limit',memory_limit,'num_cores',num_cores,...
     'plot_functions',{@dsPlot,@dsPlot,@dsPlot},...
     'plot_options',{{'plot_type','waveform_averaged','format','png'},...
-                    {'plot_type','rastergram','format','png'},...
-                    {'plot_type','power','format','png','xlim',[0 40],'MUA_only_flag',1}});
+                    {'plot_type','rastergram','format','png'}});%,...
+%                     {'plot_type','power','format','png','xlim',[0 40],'MUA_only_flag',1}});
 
 % -------------------------------------------------------------------
 %% 4. (Optional) Plot the results of the simulation post hoc

@@ -19,7 +19,7 @@
 % - Tags: potassium, leak, current, intrinsic, interneuron, dendrite
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Parameters
-gLeak = 0.02 % mS/cm^2
+gLeak = 0.033 % mS/cm^2
 ELeak = -70  % mV
 
 % Functions

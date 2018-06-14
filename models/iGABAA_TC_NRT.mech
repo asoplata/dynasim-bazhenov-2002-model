@@ -37,9 +37,9 @@
 %     target cell and convert the conductance to mS/cm^2. We do this by
 %     converting uS to mS and dividing by the area of the target TC neurons:
 %
-%    0.05 uS * (1 mS / 1000 uS) * (1 / 2.9e-4 cm^2)) = 0.172 mS/cm^2
+%    0.2 uS * (1 mS / 1000 uS) * (1 / 2.9e-4 cm^2)) = 0.69 mS/cm^2
 %
-gGABAA = 0.172  % mS/cm^2
+gGABAA = 0.69  % mS/cm^2
 EGABAA = -83   % mV
 sGABAAIC = 0.1
 sGABAANoiseIC = 0.1
@@ -51,7 +51,7 @@ beta  = 0.166 % ms^-1
 
 % In the original code, this sleep stage experimental factor is represented by
 %     `fac_GABA_TC`
-fac_GABAA_TC_NRT = 0.55
+fac_GABAA_TC_NRT = 1
 
 % This is our DynaSim-varied, cell-type-NONspecific adjustment factor
 fac_GABA_thal_large_vary = 0
@@ -62,7 +62,7 @@ propofolCondMult = 1
 
 % Connective radius, aka how many target cells each source cell connects to,
 %     from the source's perspective.
-radius = 8
+radius = 5
 
 % We also need to normalize the conductance in mS/cm^2 by the number of
 %     connections each target cell is receiving on average, so that the TOTAL sum

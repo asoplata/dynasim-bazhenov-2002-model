@@ -15,7 +15,7 @@
 % - Tags: potassium, current, intrinsic, interneuron, soma
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Parameters
-gK = 200   % mS/cm^2
+gK = 177   % mS/cm^2
 EK = -90    % mV
 
 % In the original code, this sleep stage experimental factor is represented by
