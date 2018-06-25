@@ -1,14 +1,14 @@
-% # iKLeak_NRT: Potassium Leak current for generic thalamic reticular cells
-%     used in the DynaSim implementation of (Krishnan et al., 2016). Note that
+% # iKLeak_TRN: Potassium Leak current for generic thalamic reticular cells
+%     used in the DynaSim implementation of (Bazhenov et al., 2002). Note that
 %     in the original code, this celltype is called RE.
 %
 % - Source: This was built from the original paper's code, using "currents.h"
 %     line 1122, "currents.cpp" lines 103, 1031, and "CellSyn.h" lines 14.
 %
 % - References:
-%     - Krishnan GP, Chauvette S, Shamie I, Soltani S, Timofeev I, Cash SS, et
-%         al. Cellular and neurochemical basis of sleep stages in the
-%         thalamocortical network. eLife. 2016;5: e18607
+%     - Bazhenov M, Timofeev I, Steriade M, Sejnowski TJ. Model of thalamocortical
+%         slow-wave sleep oscillations and transitions to activated states. The
+%         Journal of Neuroscience. 2002;22: 8691–8704.
 %
 % - Tags: leak, current, intrinsic, thalamus, potassium, reticular
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -18,12 +18,12 @@ EKLeak = -95    % mV
 
 % In the original code, this sleep stage experimental factor is represented by
 %     `fac_gkl_RE`
-fac_KLeak_NRT = 1  % unitless
+fac_KLeak_TRN = 1  % unitless
 
 % Functions
-IKLeak_NRT(X) = -fac_KLeak_NRT.*gKLeak.*(X-EKLeak)
+IKLeak_TRN(X) = -fac_KLeak_TRN.*gKLeak.*(X-EKLeak)
 
-monitor IKLeak_NRT
+monitor IKLeak_TRN
 
 % Linker
-@current += IKLeak_NRT(X)
+@current += IKLeak_TRN(X)

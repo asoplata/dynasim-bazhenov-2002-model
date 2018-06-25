@@ -1,0 +1,25 @@
+% # iLeak_TRN: Leak current for generic thalamic reticular cells used in the
+%     DynaSim implementation of (Bazhenov et al., 2002). Note that in the
+%     original code, this celltype is called RE.
+%
+% - Source: This was built from the original paper's code, using "currents.h"
+%     lines 1120-1121, "currents.cpp" lines 1031, and "CellSyn.h" lines 14.
+%
+% - References:
+%     - Bazhenov M, Timofeev I, Steriade M, Sejnowski TJ. Model of thalamocortical
+%         slow-wave sleep oscillations and transitions to activated states. The
+%         Journal of Neuroscience. 2002;22: 8691–8704.
+%
+% - Tags: leak, current, intrinsic, thalamus, reticular
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Parameters
+gLeak = 0.05; % mS/cm^2
+ELeak = -77;  % mV
+
+% Functions
+ILeak_TRN(X) = -gLeak.*(X-ELeak)
+
+monitor ILeak_TRN
+
+% Linker
+@current += ILeak_TRN(X)

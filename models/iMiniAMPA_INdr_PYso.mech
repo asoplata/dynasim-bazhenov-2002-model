@@ -1,7 +1,7 @@
 % # iMiniAMPA_INdr_PYso: Normalized synaptic randomized "mini" AMPAergic
 %     excitatory current FROM the pyramidal axo-soma compartment TO interneuron
 %     dendrite INdr<-PYso connection used in the DynaSim implementation of
-%     (Krishnan et al., 2016). Note that in the original code, the class for
+%     (Bazhenov et al., 2002). Note that in the original code, the class for
 %     this current is called AMPA_D2, PYso are called CX or CX_SOMA, and INdr
 %     are called CX, CX_DEND, IN, or FS1. Also note that, instead of using a
 %     Heaviside increase in transmitter concentration upon spike detection, we
@@ -20,9 +20,9 @@
 %     - Ermentrout GB, Kopell N. Fine structure of neural spiking and
 %         synchronization in the presence of conduction delays. Proceedings of
 %         the National Academy of Sciences. 1998;95: 1259–1264.
-%     - Krishnan GP, Chauvette S, Shamie I, Soltani S, Timofeev I, Cash SS, et
-%         al. Cellular and neurochemical basis of sleep stages in the
-%         thalamocortical network. eLife. 2016;5: e18607
+%     - Bazhenov M, Timofeev I, Steriade M, Sejnowski TJ. Model of thalamocortical
+%         slow-wave sleep oscillations and transitions to activated states. The
+%         Journal of Neuroscience. 2002;22: 8691–8704.
 %
 % - Tags: synapse, connection, excitation, ampa
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

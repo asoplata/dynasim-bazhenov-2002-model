@@ -1,5 +1,5 @@
-% # iK_NRT: Fast potassium current, for generic thalamic reticular cells used
-%     in the DynaSim implementation of (Krishnan et al., 2016). Note that in
+% # iK_TRN: Fast potassium current, for generic thalamic reticular cells used
+%     in the DynaSim implementation of (Bazhenov et al., 2002). Note that in
 %     the original code, this celltype is called RE, and this current is called
 %     INaK.
 %
@@ -7,9 +7,9 @@
 %     lines 302-331, and "currents.cpp" lines 103-130.
 %
 % - References:
-%     - Krishnan GP, Chauvette S, Shamie I, Soltani S, Timofeev I, Cash SS, et
-%         al. Cellular and neurochemical basis of sleep stages in the
-%         thalamic reticular network. eLife. 2016;5: e18607
+%     - Bazhenov M, Timofeev I, Steriade M, Sejnowski TJ. Model of thalamocortical
+%       slow-wave sleep oscillations and transitions to activated states. The
+%       Journal of Neuroscience. 2002;22: 8691–8704.
 %
 % - Tags: potassium, current, intrinsic, reticular, thalamus
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -36,13 +36,13 @@ alphaN(X) = 0.032.*(15 - (X-vShift))./(exp((15 - (X-vShift))./5) - 1)
 betaN(X) = 0.5.*exp((10 - (X-vShift))./40)
 tauN(X) = 1./(alphaN(X) + betaN(X))
 Ninf(X) = alphaN(X)./(alphaN(X) + betaN(X))
-IK_NRT(X,nK) = -gK.*nK.^4.*(X-EK)
+IK_TRN(X,nK) = -gK.*nK.^4.*(X-EK)
 
-monitor IK_NRT
+monitor IK_TRN
 
 % ODEs and ICs
 nK' = (Ninf(X)-nK)./tauN(X)
 nK(0)=nKIC+nKNoiseIC.*rand(1,Npop)
 
 % Linker
-@current += IK_NRT(X,nK)
+@current += IK_TRN(X,nK)

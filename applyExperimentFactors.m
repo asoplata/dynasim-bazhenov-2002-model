@@ -1,29 +1,29 @@
-function output = applyExperimentFactors(krishnanSpecification, stage)
+function output = applyExperimentFactors(bazhenovSpecification, stage)
 %APPLYEXPERIMENTFACTORS - Apply pre-determined adjustment factors for sleep stages
 %
-% applyExperimentFactors takes a (Krishnan et al., 2016)-type DynaSim model
+% applyExperimentFactors takes a (Bazhenov et al., 2002)-type DynaSim model
 % specification and applies the adjustment factors for one of the four
 % different behavioral states investigated in the original paper: Awake, NREM2,
 % NREM3, and REM.
 %
 % Inputs:
-%   'krishnanSpecification': DynaSim specification structure for the (Krishnan
-%                            et al., 2016) model
+%   'bazhenovSpecification': DynaSim specification structure for the (Bazhenov
+%                            et al., 2002) model
 %       - see dsCheckModel and dsCheckSpecification for details
 %   'stage': which sleep stage to adjust the model to, choose from {'Awake',
 %       'N2', 'N3', 'REM'} (default: 'Awake')
 %
 % Outputs:
-%   'output': DynaSim specification structure for the (Krishnan
-%             et al., 2016) model with the adjustment factors applied
+%   'output': DynaSim specification structure for the (Bazhenov
+%             et al., 2002) model with the adjustment factors applied
 %
 % Dependencies:
 %   - This has only been tested on MATLAB version 2017a.
 %
 % References:
-%   - Krishnan GP, Chauvette S, Shamie I, Soltani S, Timofeev I, Cash SS, et
-%     al. Cellular and neurochemical basis of sleep stages in the
-%     thalamocortical network. eLife. 2016;5: e18607.
+%   - Bazhenov M, Timofeev I, Steriade M, Sejnowski TJ. Model of thalamocortical
+%     slow-wave sleep oscillations and transitions to activated states. The
+%     Journal of Neuroscience. 2002;22: 8691–8704.
 %
 % Author: Austin E. Soplata <austin.soplata@gmail.com>
 % Copyright (C) 2018 Austin E. Soplata, Boston University, USA
@@ -93,12 +93,12 @@ shift_H_TC('N2')        = -3.0;
 shift_H_TC('N3')        = -2.0;
 shift_H_TC('REM')       =  0.0;
 
-% NRT
-KLeak_NRT = containers.Map;
-KLeak_NRT('Awake')      = 0.9;
-KLeak_NRT('N2')         = KLeak_NRT('Awake')*((2-N2_scale/2)-0.5);
-KLeak_NRT('N3')         = KLeak_NRT('Awake')*((2-N3_scale/2)-0.5);
-KLeak_NRT('REM')        = KLeak_NRT('Awake')*1.1;
+% TRN
+KLeak_TRN = containers.Map;
+KLeak_TRN('Awake')      = 0.9;
+KLeak_TRN('N2')         = KLeak_TRN('Awake')*((2-N2_scale/2)-0.5);
+KLeak_TRN('N3')         = KLeak_TRN('Awake')*((2-N3_scale/2)-0.5);
+KLeak_TRN('REM')        = KLeak_TRN('Awake')*1.1;
 
 
 % ------------------------------------------
@@ -117,16 +117,16 @@ modifications = {...
     'INdr<-PYso', 'fac_MiniAMPA_INdr_PYso', AMPA_to_cortex(stage);
     % In the original code, this is called: fac_AMPA_TC. Also, this was
     %     NEVER actually changed between experimental states!!!
-    'NRT<-TC',   'fac_AMPA_NRT_TC',   AMPA_to_thal(stage);
-    'NRT<-PYso', 'fac_AMPA_NRT_PYso', AMPA_to_thal(stage);
+    'TRN<-TC',   'fac_AMPA_TRN_TC',   AMPA_to_thal(stage);
+    'TRN<-PYso', 'fac_AMPA_TRN_PYso', AMPA_to_thal(stage);
     'TC<-PYso',  'fac_AMPA_TC_PYso',  AMPA_to_thal(stage);
     % In the original code, this is called: fac_GABA_D2
     'PYdr<-INso', 'fac_GABAAdepr_PYdr_INso', GABA_cortex(stage);
     'PYdr<-INso', 'fac_MiniGABAA_PYdr_INso', GABA_cortex(stage);
     % In the original code, this is called: fac_GABA_TC
-    'NRT<-NRT', 'fac_GABAA_NRT_NRT', GABA_TC(stage);
-    'TC<-NRT', ' fac_GABAA_TC_NRT',  GABA_TC(stage);
-    'TC<-NRT', ' fac_GABAB_TC_NRT',  GABA_TC(stage);
+    'TRN<-TRN', 'fac_GABAA_TRN_TRN', GABA_TC(stage);
+    'TC<-TRN', ' fac_GABAA_TC_TRN',  GABA_TC(stage);
+    'TC<-TRN', ' fac_GABAB_TC_TRN',  GABA_TC(stage);
     % In the original code, this is called: fac_gkl
     'PYdr', 'fac_KLeak_PYdr', KLeak_cortex(stage);
     'INdr', 'fac_KLeak_INdr', KLeak_cortex(stage);
@@ -146,10 +146,10 @@ modifications = {...
     % In the original code, this is called: fac_gh_TC
     'TC', 'fac_shift_H_TC', shift_H_TC(stage);
     % In the original code, this is called: fac_gkl_RE
-    'NRT', 'fac_KLeak_NRT', KLeak_NRT(stage); 
+    'TRN', 'fac_KLeak_TRN', KLeak_TRN(stage); 
 };
 
 % ------------------------------------------
 %% 3. Apply the changes to the model
 % ------------------------------------------
-output = dsApplyModifications(krishnanSpecification, modifications);
+output = dsApplyModifications(bazhenovSpecification, modifications);

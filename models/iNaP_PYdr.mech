@@ -1,6 +1,6 @@
 % # iNaP_PYdr: Persistent sodium current, Hodgkin-Huxley-style, for
 %     generic pyramidal dendrite compartments used in the DynaSim
-%     implementation of (Krishnan et al., 2016). Note that in the original
+%     implementation of (Bazhenov et al., 2002). Note that in the original
 %     code, this compartment/cell type is called CX or CX_DEND, and this
 %     current is called INap_CX.
 %
@@ -8,9 +8,9 @@
 %     lines 533-546, 1205 and "currents.cpp" lines 306-314.
 %
 % - References:
-%     - Krishnan GP, Chauvette S, Shamie I, Soltani S, Timofeev I, Cash SS, et
-%         al. Cellular and neurochemical basis of sleep stages in the
-%         thalamocortical network. eLife. 2016;5: e18607
+%     - Bazhenov M, Timofeev I, Steriade M, Sejnowski TJ. Model of thalamocortical
+%         slow-wave sleep oscillations and transitions to activated states. The
+%         Journal of Neuroscience. 2002;22: 8691–8704.
 %
 % - Tags: sodium, current, intrinsic, pyramidal, dendrite
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

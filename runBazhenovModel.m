@@ -1,15 +1,15 @@
-%RUNKRISHNANMODEL - Run the DynaSim implementation of the (Krishnan et al., 2016) model!
+%RUNBAZHENOVMODEL - Run the DynaSim implementation of the (Bazhenov et al., 2002) model!
 %{
 This is a starter script to show both how to use the DynaSim mechanisms I've
-made for simulating the (Krishnan et al., 2016) model in Dynasim, available
-here (https://github.com/asoplata/dynasim-krishnan-2016-model) while also
+made for simulating the (Bazhenov et al., 2002) model in Dynasim, available
+here (https://github.com/asoplata/dynasim-bazhenov-2002-model) while also
 giving you a good skeleton to start experimenting yourself.
 
 - Install:
   1. Install DynaSim (https://github.com/DynaSim/DynaSim/wiki/Installation),
      including adding it to your MATLAB path.
   2. `git clone` or download this code's repo
-     (https://github.com/asoplata/dynasim-krishnan-2016-model) into
+     (https://github.com/asoplata/dynasim-bazhenov-2002-model) into
      '/your/path/to/dynasim/models', i.e. the 'models' subdirectory of your
      copy of the DynaSim repo.
   3. Run this file.
@@ -29,9 +29,9 @@ giving you a good skeleton to start experimenting yourself.
   - This has only been tested on MATLAB version 2017a.
 
 - References:
-  - Krishnan GP, Chauvette S, Shamie I, Soltani S, Timofeev I, Cash SS, et
-    al. Cellular and neurochemical basis of sleep stages in the
-    thalamocortical network. eLife. 2016;5: e18607.
+  - Bazhenov M, Timofeev I, Steriade M, Sejnowski TJ. Model of thalamocortical
+    slow-wave sleep oscillations and transitions to activated states. The
+    Journal of Neuroscience. 2002;22: 8691–8704.
 
 This is descended from DynaSim's `tutorial.m` script, at
 https://github.com/DynaSim/DynaSim/blob/master/demos/tutorial.m
@@ -59,12 +59,12 @@ time_end = 1000; % in milliseconds
 dt = 0.01; % in milliseconds
 
 % For the full size model (500 PYso's and PYdr's, 100 INso's and INdr's, 100
-%   TC's, and 100 NRT's), use a `numCellsScaledownFactor` of 1. To lower the
+%   TC's, and 100 TRN's), use a `numCellsScaledownFactor` of 1. To lower the
 %   number of cells simulated, but keep the same proportions, decrease this
 %   number to something > 0. As an example, using a 
 %   numCellsScaledownFactor of 0.1 (aka using a size of 10%) would 
 %   decrease the population sizes to 50 PYso's and PYdr's, 10 INso's and 
-%   INdr's, 10 TC's, and 10 NRT's.
+%   INdr's, 10 TC's, and 10 TRN's.
 numCellsScaledownFactor = 1;
 
 % "Vary" parameters, aka parameters to be varied -- this tells DynaSim to run a

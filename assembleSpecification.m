@@ -1,7 +1,7 @@
 function specification = assembleSpecification(dt, numCellsScaledown)
-%ASSEMBLESPECIFICATION - Construct and connect the (Krishnan et al., 2016) model
+%ASSEMBLESPECIFICATION - Construct and connect the (Bazhenov et al., 2002) model
 %
-% assembleSpecification builds a (Krishnan et al., 2016)-type DynaSim
+% assembleSpecification builds a (Bazhenov et al., 2002)-type DynaSim
 % specification, including both its populations and connections from the many
 % mechanism files contained in the 'models/' subdirectory.
 %
@@ -14,20 +14,20 @@ function specification = assembleSpecification(dt, numCellsScaledown)
 %                        smaller proportion like 0.2.
 %
 % Outputs:
-%   'specification': DynaSim specification structure for the (Krishnan
-%                    et al., 2016) model.
+%   'specification': DynaSim specification structure for the (Bazhenov
+%                    et al., 2002) model.
 %
 % Note: By default, the specification output by this function is set to the
-%   'Awake' behavioral state as used in (Krishnan et al., 2016). To change
+%   'Awake' behavioral state as used in (Bazhenov et al., 2002). To change
 %   this, use the `applyExperimentFactors.m` function.
 %
 % Dependencies:
 %   - This has only been tested on MATLAB version 2017a.
 %
 % References:
-%   - Krishnan GP, Chauvette S, Shamie I, Soltani S, Timofeev I, Cash SS, et
-%     al. Cellular and neurochemical basis of sleep stages in the
-%     thalamocortical network. eLife. 2016;5: e18607.
+%   - Bazhenov M, Timofeev I, Steriade M, Sejnowski TJ. Model of thalamocortical
+%     slow-wave sleep oscillations and transitions to activated states. The
+%     Journal of Neuroscience. 2002;22: 8691–8704.
 %
 % Author: Austin E. Soplata <austin.soplata@gmail.com>
 % Copyright (C) 2018 Austin E. Soplata, Boston University, USA
@@ -160,25 +160,25 @@ specification.populations(5).mechanism_list={...
     'iKLeak_TC',...
     'CaBuffer_TC','iT_TC','iH_TC'};
 
-specification.populations(6).name='NRT';
+specification.populations(6).name='TRN';
 specification.populations(6).size=round(numCellsScaledown*50);
 specification.populations(6).equations=eqns;
 specification.populations(6).mechanism_list={...
     'iAppliedCurrent',...
-    'iNa_NRT',...
-    'iK_NRT',...
-    'iLeak_NRT',...
-    'iKLeak_NRT',...
-    'CaBuffer_NRT','iT_NRT'};
+    'iNa_TRN',...
+    'iK_TRN',...
+    'iLeak_TRN',...
+    'iKLeak_TRN',...
+    'CaBuffer_TRN','iT_TRN'};
 
-specification.connections(7).direction='TC<-NRT';
+specification.connections(7).direction='TC<-TRN';
 specification.connections(7).mechanism_list={...
-    'iGABAA_TC_NRT',...
-    'iGABAB_TC_NRT'};
-specification.connections(8).direction='NRT<-NRT';
-specification.connections(8).mechanism_list={'iGABAA_NRT_NRT'};
-specification.connections(9).direction='NRT<-TC';
-specification.connections(9).mechanism_list={'iAMPA_NRT_TC'};
+    'iGABAA_TC_TRN',...
+    'iGABAB_TC_TRN'};
+specification.connections(8).direction='TRN<-TRN';
+specification.connections(8).mechanism_list={'iGABAA_TRN_TRN'};
+specification.connections(9).direction='TRN<-TC';
+specification.connections(9).mechanism_list={'iAMPA_TRN_TC'};
 
 % -------------------------------------------------------------------
 %% 4. Thalamo-cortical Connections
@@ -192,5 +192,5 @@ specification.connections(11).mechanism_list={'iAMPAdepr_INdr_TC'};
 specification.connections(12).direction='TC<-PYso';
 specification.connections(12).mechanism_list={'iAMPA_TC_PYso'};
 
-specification.connections(13).direction='NRT<-PYso';
-specification.connections(13).mechanism_list={'iAMPA_NRT_PYso'};
+specification.connections(13).direction='TRN<-PYso';
+specification.connections(13).mechanism_list={'iAMPA_TRN_PYso'};
