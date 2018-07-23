@@ -1,27 +1,27 @@
-function output = removeNoiseIC(krishnanSpecification)
-%REMOVENOISEIC - Set all initial condition noise to 0 for (Krishnan et al., 2016) models
+function output = removeNoiseIC(bazhenovSpecification)
+%REMOVENOISEIC - Set all initial condition noise to 0 for (Bazhenov et al., 2002) models
 %
-% For a (Krishnan et al., 2016)-style DynaSim specification, this function
+% For a (Bazhenov et al., 2002)-style DynaSim specification, this function
 % simply sets all the initial condition noise terms to 0, so that every
 % simulation using this has the same starting conditions. This is useful for
 % both reproducibility and debugging.
 %
 % Inputs:
-%   'krishnanSpecification': DynaSim specification structure for the (Krishnan
-%                            et al., 2016) model
+%   'bazhenovSpecification': DynaSim specification structure for the (Bazhenov
+%                            et al., 2002) model
 %     - see dsCheckModel and dsCheckSpecification for details
 %
 % Outputs:
-%   'output': DynaSim specification structure for the (Krishnan
-%             et al., 2016) model with all initial condition noise removed.
+%   'output': DynaSim specification structure for the (Bazhenov
+%             et al., 2002) model with all initial condition noise removed.
 %
 % Dependencies:
 %   - This has only been tested on MATLAB version 2017a.
 %
 % References:
-%   - Krishnan GP, Chauvette S, Shamie I, Soltani S, Timofeev I, Cash SS, et
-%     al. Cellular and neurochemical basis of sleep stages in the
-%     thalamocortical network. eLife. 2016;5: e18607.
+%   - Bazhenov M, Timofeev I, Steriade M, Sejnowski TJ. Model of thalamocortical
+%     slow-wave sleep oscillations and transitions to activated states. The
+%     Journal of Neuroscience. 2002;22: 8691–8704.
 %
 % Author: Austin E. Soplata <austin.soplata@gmail.com>
 % Copyright (C) 2018 Austin E. Soplata, Boston University, USA
@@ -31,7 +31,7 @@ function output = removeNoiseIC(krishnanSpecification)
 % ------------------------------------------
 modifications  = {...
   'INdr',        'CaBufferNoiseIC'     ,     0;
-  'NRT',         'CaBufferNoiseIC'     ,     0;
+  'TRN',         'CaBufferNoiseIC'     ,     0;
   'PYdr',        'CaBufferNoiseIC'     ,     0;
   'TC',          'CaBufferNoiseIC'     ,     0;
   'INdr<-PYso',  'sAMPANoiseIC'        ,     0;
@@ -42,15 +42,15 @@ modifications  = {...
   'PYdr<-PYso',  'deprAMPANoiseIC'     ,     0;
   'PYdr<-TC',    'sAMPANoiseIC'        ,     0;
   'PYdr<-TC',    'deprAMPANoiseIC'     ,     0;
-  'NRT<-PYso',   'sAMPANoiseIC'        ,     0;
-  'NRT<-TC',     'sAMPANoiseIC'        ,     0;
+  'TRN<-PYso',   'sAMPANoiseIC'        ,     0;
+  'TRN<-TC',     'sAMPANoiseIC'        ,     0;
   'TC<-PYso',    'sAMPANoiseIC'        ,     0;
   'PYdr<-INso',  'sGABAANoiseIC'       ,     0;
   'PYdr<-INso',  'deprGABAANoiseIC'    ,     0;
-  'NRT<-NRT',    'sGABAANoiseIC'       ,     0;
-  'TC<-NRT',     'sGABAANoiseIC'       ,     0;
-  'TC<-NRT',     'rGABABNoiseIC'       ,     0;
-  'TC<-NRT',     'gGABABNoiseIC'       ,     0;
+  'TRN<-TRN',    'sGABAANoiseIC'       ,     0;
+  'TC<-TRN',     'sGABAANoiseIC'       ,     0;
+  'TC<-TRN',     'rGABABNoiseIC'       ,     0;
+  'TC<-TRN',     'gGABABNoiseIC'       ,     0;
   'TC',          'OpenHNoiseIC'        ,     0;
   'TC',          'PoneHNoiseIC'        ,     0;
   'TC',          'OpenLockedHNoiseIC'  ,     0;
@@ -61,7 +61,7 @@ modifications  = {...
   'INdr',        'mKCaNoiseIC'         ,     0;
   'PYdr',        'mKCaNoiseIC'         ,     0;
   'INso',        'nKNoiseIC'           ,     0;
-  'NRT',         'nKNoiseIC'           ,     0;
+  'TRN',         'nKNoiseIC'           ,     0;
   'PYso',        'nKNoiseIC'           ,     0;
   'TC',          'nKNoiseIC'           ,     0;
   'INdr',        'mMNoiseIC'           ,     0;
@@ -76,8 +76,8 @@ modifications  = {...
   'INdr',        'hNaNoiseIC'          ,     0;
   'INso',        'mNaNoiseIC'          ,     0;
   'INso',        'hNaNoiseIC'          ,     0;
-  'NRT',         'mNaNoiseIC'          ,     0;
-  'NRT',         'hNaNoiseIC'          ,     0;
+  'TRN',         'mNaNoiseIC'          ,     0;
+  'TRN',         'hNaNoiseIC'          ,     0;
   'PYdr',        'mNaPNoiseIC'         ,     0;
   'PYso',        'mNaPNoiseIC'         ,     0;
   'PYdr',        'mNaNoiseIC'          ,     0;
@@ -88,8 +88,8 @@ modifications  = {...
   'TC',          'hNaNoiseIC'          ,     0;
   'INdr<-PYso',  'sNMDANoiseIC'        ,     0;
   'PYdr<-PYso',  'sNMDANoiseIC'        ,     0;
-  'NRT',         'mTNoiseIC'           ,     0;
-  'NRT',         'hTNoiseIC'           ,     0;
+  'TRN',         'mTNoiseIC'           ,     0;
+  'TRN',         'hTNoiseIC'           ,     0;
   'TC',          'mTNoiseIC'           ,     0;
   'TC',          'hTNoiseIC'           ,     0;
   'INdr',        'vNoiseIC'            ,     0;
@@ -97,10 +97,10 @@ modifications  = {...
   'PYdr',        'vNoiseIC'            ,     0;
   'PYso',        'vNoiseIC'            ,     0;
   'TC',          'vNoiseIC'            ,     0;
-  'NRT',         'vNoiseIC'            ,     0;
+  'TRN',         'vNoiseIC'            ,     0;
 };
 
 % ------------------------------------------
 %% 2. Apply the changes to the model
 % ------------------------------------------
-output = dsApplyModifications(krishnanSpecification, modifications);
+output = dsApplyModifications(bazhenovSpecification, modifications);

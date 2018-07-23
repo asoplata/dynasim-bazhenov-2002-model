@@ -1,6 +1,6 @@
 % # iKCa_INdr: slow calcium-dependent potassium current, for generic
 %     interneuron dendrite compartments used in the DynaSim implementation of
-%     (Krishnan et al., 2016). In the original code, this compartment/cell type
+%     (Bazhenov et al., 2002). In the original code, this compartment/cell type
 %     is called CX, CX_DEND, and sometimes IN, and this current is called
 %     IKCa_CX.
 %
@@ -16,9 +16,9 @@
 %     lines 439-444, 1207 and "currents.cpp" lines 225-237.
 %
 % - References:
-%     - Krishnan GP, Chauvette S, Shamie I, Soltani S, Timofeev I, Cash SS, et
-%         al. Cellular and neurochemical basis of sleep stages in the
-%         thalamocortical network. eLife. 2016;5: e18607
+%     - Bazhenov M, Timofeev I, Steriade M, Sejnowski TJ. Model of thalamocortical
+%         slow-wave sleep oscillations and transitions to activated states. The
+%         Journal of Neuroscience. 2002;22: 8691–8704.
 %
 % - Requires: @CaBuffer_INdr calcium concentration exposed by
 %     "CaBuffer_INdr" mechanism
