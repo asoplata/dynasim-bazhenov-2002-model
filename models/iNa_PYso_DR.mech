@@ -1,10 +1,10 @@
-% # iNa_PYdr: Fast sodium current for generic pyramidal dendrite
+% # iNa_PYso_DR: Fast sodium current for generic pyramidal soma
 %     compartments used in the DynaSim implementation of (Krishnan et al.,
 %     2016). Note that in the original code, this compartment/cell type is
-%     called CX or CX_DEND, and this current is called INa_CX.
+%     called CX or CX_SOMA, and this current is called INa_CX.
 %
 % - Source: This was built from the original paper's code, using "currents.h"
-%     lines 504-526, 1202 and "currents.cpp" lines 275-302. The `trap0`
+%     lines 504-526, 1236 and "currents.cpp" lines 275-302. The `trap0`
 %     threshold detection was also built from code from the cited source paper,
 %     (Mainen & Sejnowski, 1996), file "cells/na.mod" lines 24-25 and 185-191,
 %     NOT (Krishnan, et al., 2016).
@@ -20,20 +20,20 @@
 %         pattern in model neocortical neurons. Nature. 1996;382: 363–366.
 %         doi:10.1038/382363a0
 %
-% - Tags: sodium, current, intrinsic, pyramidal, dendrite
+% - Tags: sodium, current, intrinsic, pyramidal, soma
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Parameters
-gNa = 0.8 % mS/cm^2
-ENa = 50  % mV
+gNa_DR = 3000 % mS/cm^2
+ENa_DR_DR = 50  % mV
 % The Q10 temperature adjustment values never change over the course of the
 %     simulations, so we are setting them to be constant.
-phiM = 2.3^((36-23)/10)   % unitless Q10 value of temperature adjustment
-phiH = 2.3^((36-23)/10)   % unitless Q10 value of temperature adjustment
+phiM_DR = 2.3^((36-23)/10)   % unitless Q10 value of temperature adjustment
+phiH_DR = 2.3^((36-23)/10)   % unitless Q10 value of temperature adjustment
 
-mNaIC = 0.75
-mNaNoiseIC = 0
-hNaIC = 0.5
-hNaNoiseIC = 0
+mNaIC_DR = 0.0
+mNaNoiseIC_DR = 0.01
+hNaIC = 1.0
+hNaNoiseIC = -0.01
 
 threshM = -35
 rateConstantMAlpha = 0.182
@@ -56,20 +56,26 @@ betaM(X) =  iNaThresholdDetector(-(X-10), -threshM, rateConstantMBeta,  expDenom
 alphaH(X) = iNaThresholdDetector( (X-10), threshHAlpha, rateConstantHAlpha, expDenomH)
 betaH(X) =  iNaThresholdDetector(-(X-10), -threshHBeta, rateConstantHBeta,  expDenomH)
 
-tauM(X) = (1./(alphaM(X) + betaM(X)))./phiM
+tauM(X) = (1./(alphaM(X) + betaM(X)))./phiM_DR
 Minf(X) = alphaM(X)./(alphaM(X) + betaM(X))
-tauH(X) = (1./(alphaH(X) + betaH(X)))./phiH
+tauH(X) = (1./(alphaH(X) + betaH(X)))./phiH_DR
 Hinf(X) = 1./(1 + exp(((X-10) + 65)./6.2))
 
-INa_PYdr(X,mNa,hNa) = -phiM*gNa.*mNa.^3.*hNa.*(X-ENa)
+% Instead of the PYso axo-somatic compartment calculating the dv/dt the normal
+%     way, they solve for just v using the "steady-state" values of the system.
+%     This means that we have to calculate different parts of the current/etc.
+%     differently:
+% Note that the below doesn't contain the voltage of the soma. This is
+%     analogous to the corresponding part of `g2_SOMA` in the original code:
+I_Na_PYso_DR(X,mNa,hNa) = -phiM_DR*gNa_DR.*mNa.^3.*hNa.*(X-ENa_DR_DR)
 
-monitor INa_PYdr
+monitor I_Na_PYso_DR
 
 % ODEs and ICs
 mNa' = (Minf(X)-mNa)./tauM(X)
-mNa(0)=mNaIC+mNaNoiseIC.*rand(1,Npop)
+mNa(0)=mNaIC_DR+mNaNoiseIC_DR.*rand(1, Npop)
 hNa' = (Hinf(X)-hNa)./tauH(X)
-hNa(0)=hNaIC+hNaNoiseIC.*rand(1,Npop)
+hNa(0)=hNaIC+hNaNoiseIC.*rand(1, Npop)
 
 % Interface
-@current += INa_PYdr(X, mNa, hNa)
+@current += I_Na_PYso_DR(X,mNa,hNa)

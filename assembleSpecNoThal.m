@@ -1,5 +1,5 @@
-function specification = assembleSpecification(dt, numCellsScaledown)
-%ASSEMBLESPECIFICATION - Construct and connect the (Bazhenov et al., 2002) model
+function specification = assembleSpecNoThal(dt, numCellsScaledown)
+%ASSEMBLESPECNOTHAL - Construct and connect the (Bazhenov et al., 2002) model
 %
 % assembleSpecification builds a (Bazhenov et al., 2002)-type DynaSim
 % specification, including both its populations and connections from the many
@@ -146,51 +146,51 @@ specification.connections(6).mechanism_list={...
     'iGABAAdepr_PYdr_INso',...
     'iMiniGABAA_PYdr_INso'};
 
-% -------------------------------------------------------------------
-%% 3. Assemble Thalamic Model and Intrathalamic Connections
-% -------------------------------------------------------------------
-specification.populations(5).name='TC';
-specification.populations(5).size=round(numCellsScaledown*50);
-specification.populations(5).equations=eqns;
-specification.populations(5).mechanism_list={...
-    'iAppliedCurrent',...
-    'iNa_TC',...
-    'iK_TC',...
-    'iLeak_TC',...
-    'iKLeak_TC',...
-    'CaBuffer_TC','iT_TC','iH_TC'};
-
-specification.populations(6).name='TRN';
-specification.populations(6).size=round(numCellsScaledown*50);
-specification.populations(6).equations=eqns;
-specification.populations(6).mechanism_list={...
-    'iAppliedCurrent',...
-    'iNa_TRN',...
-    'iK_TRN',...
-    'iLeak_TRN',...
-    'iKLeak_TRN',...
-    'CaBuffer_TRN','iT_TRN'};
-
-specification.connections(7).direction='TC<-TRN';
-specification.connections(7).mechanism_list={...
-    'iGABAA_TC_TRN',...
-    'iGABAB_TC_TRN'};
-specification.connections(8).direction='TRN<-TRN';
-specification.connections(8).mechanism_list={'iGABAA_TRN_TRN'};
-specification.connections(9).direction='TRN<-TC';
-specification.connections(9).mechanism_list={'iAMPA_TRN_TC'};
-
-% -------------------------------------------------------------------
-%% 4. Thalamo-cortical Connections
-% -------------------------------------------------------------------
-specification.connections(10).direction='PYdr<-TC';
-specification.connections(10).mechanism_list={'iAMPAdepr_PYdr_TC'};
-
-specification.connections(11).direction='INdr<-TC';
-specification.connections(11).mechanism_list={'iAMPAdepr_INdr_TC'};
-
-specification.connections(12).direction='TC<-PYso';
-specification.connections(12).mechanism_list={'iAMPA_TC_PYso'};
-
-specification.connections(13).direction='TRN<-PYso';
-specification.connections(13).mechanism_list={'iAMPA_TRN_PYso'};
+% % -------------------------------------------------------------------
+% %% 3. Assemble Thalamic Model and Intrathalamic Connections
+% % -------------------------------------------------------------------
+% specification.populations(5).name='TC';
+% specification.populations(5).size=round(numCellsScaledown*50);
+% specification.populations(5).equations=eqns;
+% specification.populations(5).mechanism_list={...
+%     'iAppliedCurrent',...
+%     'iNa_TC',...
+%     'iK_TC',...
+%     'iLeak_TC',...
+%     'iKLeak_TC',...
+%     'CaBuffer_TC','iT_TC','iH_TC'};
+% 
+% specification.populations(6).name='TRN';
+% specification.populations(6).size=round(numCellsScaledown*50);
+% specification.populations(6).equations=eqns;
+% specification.populations(6).mechanism_list={...
+%     'iAppliedCurrent',...
+%     'iNa_TRN',...
+%     'iK_TRN',...
+%     'iLeak_TRN',...
+%     'iKLeak_TRN',...
+%     'CaBuffer_TRN','iT_TRN'};
+% 
+% specification.connections(7).direction='TC<-TRN';
+% specification.connections(7).mechanism_list={...
+%     'iGABAA_TC_TRN',...
+%     'iGABAB_TC_TRN'};
+% specification.connections(8).direction='TRN<-TRN';
+% specification.connections(8).mechanism_list={'iGABAA_TRN_TRN'};
+% specification.connections(9).direction='TRN<-TC';
+% specification.connections(9).mechanism_list={'iAMPA_TRN_TC'};
+% 
+% % -------------------------------------------------------------------
+% %% 4. Thalamo-cortical Connections
+% % -------------------------------------------------------------------
+% specification.connections(10).direction='PYdr<-TC';
+% specification.connections(10).mechanism_list={'iAMPAdepr_PYdr_TC'};
+% 
+% specification.connections(11).direction='INdr<-TC';
+% specification.connections(11).mechanism_list={'iAMPAdepr_INdr_TC'};
+% 
+% specification.connections(12).direction='TC<-PYso';
+% specification.connections(12).mechanism_list={'iAMPA_TC_PYso'};
+% 
+% specification.connections(13).direction='TRN<-PYso';
+% specification.connections(13).mechanism_list={'iAMPA_TRN_PYso'};

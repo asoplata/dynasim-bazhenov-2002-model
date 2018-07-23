@@ -19,8 +19,8 @@
 % - Tags: potassium, leak, current, intrinsic, interneuron, dendrite
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Parameters
-gLeak = 0.033 % mS/cm^2
-ELeak = -70  % mV
+gLeak = (1e3)/30000 % mS/cm^2
+ELeak = -68  % mV
 
 % Functions
 ILeak_INdr(X) = -gLeak.*(X-ELeak)

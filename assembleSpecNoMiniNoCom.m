@@ -1,5 +1,5 @@
-function specification = assembleSpecification(dt, numCellsScaledown)
-%ASSEMBLESPECIFICATION - Construct and connect the (Bazhenov et al., 2002) model
+function specification = assembleSpecNoMiniNoCom(dt, numCellsScaledown)
+%ASSEMBLESPECNOMININOCOM - Construct and connect the (Bazhenov et al., 2002) model
 %
 % assembleSpecification builds a (Bazhenov et al., 2002)-type DynaSim
 % specification, including both its populations and connections from the many
@@ -98,14 +98,16 @@ specification.populations(2).mechanism_list={...
     'iNaP_PYso',...
     };
 
-specification.connections(1).direction='PYso<-PYdr';
-specification.connections(1).mechanism_list={'iCOM_PYso_PYdr'};
-specification.connections(2).direction='PYdr<-PYso';
-specification.connections(2).mechanism_list={...
-    'iCOM_PYdr_PYso',...
+% specification.connections(1).direction='PYso<-PYdr';
+% specification.connections(1).mechanism_list={'iCOM_PYso_PYdr'};
+% specification.connections(2).direction='PYdr<-PYso';
+% specification.connections(2).mechanism_list={...
+specification.connections(1).direction='PYdr<-PYso';
+specification.connections(1).mechanism_list={...
     'iAMPAdepr_PYdr_PYso',...
-    'iMiniAMPA_PYdr_PYso',...
     'iNMDA_PYdr_PYso'};
+%     'iCOM_PYdr_PYso',...
+%     'iMiniAMPA_PYdr_PYso',...
 
 % IN cells and intercompartmental IN connections:
 specification.populations(3).name='INdr';
@@ -129,22 +131,26 @@ specification.populations(4).mechanism_list={...
     'iK_INso',...
     };
 
-specification.connections(3).direction='INso<-INdr';
-specification.connections(3).mechanism_list={'iCOM_INso_INdr'};
-specification.connections(4).direction='INdr<-INso';
-specification.connections(4).mechanism_list={'iCOM_INdr_INso'};
+% specification.connections(3).direction='INso<-INdr';
+% specification.connections(3).mechanism_list={'iCOM_INso_INdr'};
+% specification.connections(4).direction='INdr<-INso';
+% specification.connections(4).mechanism_list={'iCOM_INdr_INso'};
 
 % PY<->IN connections/synapses
-specification.connections(5).direction='INdr<-PYso';
-specification.connections(5).mechanism_list={...
+% specification.connections(5).direction='INdr<-PYso';
+% specification.connections(5).mechanism_list={...
+specification.connections(2).direction='INdr<-PYso';
+specification.connections(2).mechanism_list={...
     'iAMPAdepr_INdr_PYso',...
-    'iMiniAMPA_INdr_PYso',...
     'iNMDA_INdr_PYso'};
+%     'iMiniAMPA_INdr_PYso',...
 
-specification.connections(6).direction='PYdr<-INso';
-specification.connections(6).mechanism_list={...
-    'iGABAAdepr_PYdr_INso',...
-    'iMiniGABAA_PYdr_INso'};
+% specification.connections(6).direction='PYdr<-INso';
+% specification.connections(6).mechanism_list={...
+specification.connections(3).direction='PYdr<-INso';
+specification.connections(3).mechanism_list={...
+    'iGABAAdepr_PYdr_INso'}; %,...
+%     'iMiniGABAA_PYdr_INso'};
 
 % -------------------------------------------------------------------
 %% 3. Assemble Thalamic Model and Intrathalamic Connections
@@ -171,26 +177,27 @@ specification.populations(6).mechanism_list={...
     'iKLeak_TRN',...
     'CaBuffer_TRN','iT_TRN'};
 
-specification.connections(7).direction='TC<-TRN';
-specification.connections(7).mechanism_list={...
+% AES changed number of connections
+specification.connections(4).direction='TC<-TRN';
+specification.connections(4).mechanism_list={...
     'iGABAA_TC_TRN',...
     'iGABAB_TC_TRN'};
-specification.connections(8).direction='TRN<-TRN';
-specification.connections(8).mechanism_list={'iGABAA_TRN_TRN'};
-specification.connections(9).direction='TRN<-TC';
-specification.connections(9).mechanism_list={'iAMPA_TRN_TC'};
+specification.connections(5).direction='TRN<-TRN';
+specification.connections(5).mechanism_list={'iGABAA_TRN_TRN'};
+specification.connections(6).direction='TRN<-TC';
+specification.connections(6).mechanism_list={'iAMPA_TRN_TC'};
 
 % -------------------------------------------------------------------
 %% 4. Thalamo-cortical Connections
 % -------------------------------------------------------------------
-specification.connections(10).direction='PYdr<-TC';
-specification.connections(10).mechanism_list={'iAMPAdepr_PYdr_TC'};
+specification.connections(7).direction='PYdr<-TC';
+specification.connections(7).mechanism_list={'iAMPAdepr_PYdr_TC'};
 
-specification.connections(11).direction='INdr<-TC';
-specification.connections(11).mechanism_list={'iAMPAdepr_INdr_TC'};
+specification.connections(8).direction='INdr<-TC';
+specification.connections(8).mechanism_list={'iAMPAdepr_INdr_TC'};
 
-specification.connections(12).direction='TC<-PYso';
-specification.connections(12).mechanism_list={'iAMPA_TC_PYso'};
+specification.connections(9).direction='TC<-PYso';
+specification.connections(9).mechanism_list={'iAMPA_TC_PYso'};
 
-specification.connections(13).direction='TRN<-PYso';
-specification.connections(13).mechanism_list={'iAMPA_TRN_PYso'};
+specification.connections(10).direction='TRN<-PYso';
+specification.connections(10).mechanism_list={'iAMPA_TRN_PYso'};

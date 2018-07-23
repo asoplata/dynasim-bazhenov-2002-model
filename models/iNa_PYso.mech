@@ -47,19 +47,19 @@ rateConstantHBeta = 0.0091
 expDenomH = 5
 
 % Functions
-vShifted(X) = X - 10
+% vShifted(X) = X - 10
 
 % This is implenting the `trap0` function in the original code
-alphaM(X) = iNaThresholdDetector( vShifted(X),  threshM, rateConstantMAlpha, expDenomM)
-betaM(X) =  iNaThresholdDetector(-vShifted(X), -threshM, rateConstantMBeta,  expDenomM)
+alphaM(X) = iNaThresholdDetector( (X-10),  threshM, rateConstantMAlpha, expDenomM)
+betaM(X) =  iNaThresholdDetector(-(X-10), -threshM, rateConstantMBeta,  expDenomM)
 
-alphaH(X) = iNaThresholdDetector( vShifted(X), threshHAlpha, rateConstantHAlpha, expDenomH)
-betaH(X) =  iNaThresholdDetector(-vShifted(X), -threshHBeta, rateConstantHBeta,  expDenomH)
+alphaH(X) = iNaThresholdDetector( (X-10), threshHAlpha, rateConstantHAlpha, expDenomH)
+betaH(X) =  iNaThresholdDetector(-(X-10), -threshHBeta, rateConstantHBeta,  expDenomH)
 
 tauM(X) = (1./(alphaM(X) + betaM(X)))./phiM
 Minf(X) = alphaM(X)./(alphaM(X) + betaM(X))
 tauH(X) = (1./(alphaH(X) + betaH(X)))./phiH
-Hinf(X) = 1./(1 + exp((vShifted(X) + 65)./6.2))
+Hinf(X) = 1./(1 + exp(((X-10) + 65)./6.2))
 
 % Instead of the PYso axo-somatic compartment calculating the dv/dt the normal
 %     way, they solve for just v using the "steady-state" values of the system.

@@ -44,8 +44,10 @@ deprAMPANoiseIC = 0.1
 
 % Note that alpha rate here corresponds to the inverse of the rise  time constant, 1/tauR, and
 %        the beta rate here corresponds to the inverse of the decay time constant, 1/tauD
-alpha = 1.1  % ms^-1
-beta  = 0.19 % ms^-1
+% alpha = 1.1  % ms^-1
+% beta  = 0.19 % ms^-1
+alpha = 0.94  % ms^-1
+beta  = 0.18 % ms^-1
 
 % In the original code, this sleep stage experimental factor is represented by
 %     `fac_AMPA_D2`

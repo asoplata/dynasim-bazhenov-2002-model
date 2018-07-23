@@ -1,5 +1,5 @@
-function specification = assembleSpecification(dt, numCellsScaledown)
-%ASSEMBLESPECIFICATION - Construct and connect the (Bazhenov et al., 2002) model
+function specification = assembleSpecNoThal(dt, numCellsScaledown)
+%ASSEMBLESPECNOTHAL - Construct and connect the (Bazhenov et al., 2002) model
 %
 % assembleSpecification builds a (Bazhenov et al., 2002)-type DynaSim
 % specification, including both its populations and connections from the many
@@ -183,14 +183,14 @@ specification.connections(9).mechanism_list={'iAMPA_TRN_TC'};
 % -------------------------------------------------------------------
 %% 4. Thalamo-cortical Connections
 % -------------------------------------------------------------------
-specification.connections(10).direction='PYdr<-TC';
-specification.connections(10).mechanism_list={'iAMPAdepr_PYdr_TC'};
+% specification.connections(10).direction='PYdr<-TC';
+% specification.connections(10).mechanism_list={'iAMPAdepr_PYdr_TC'};
+% 
+% specification.connections(11).direction='INdr<-TC';
+% specification.connections(11).mechanism_list={'iAMPAdepr_INdr_TC'};
 
-specification.connections(11).direction='INdr<-TC';
-specification.connections(11).mechanism_list={'iAMPAdepr_INdr_TC'};
+specification.connections(10).direction='TC<-PYso';
+specification.connections(10).mechanism_list={'iAMPA_TC_PYso'};
 
-specification.connections(12).direction='TC<-PYso';
-specification.connections(12).mechanism_list={'iAMPA_TC_PYso'};
-
-specification.connections(13).direction='TRN<-PYso';
-specification.connections(13).mechanism_list={'iAMPA_TRN_PYso'};
+specification.connections(11).direction='TRN<-PYso';
+specification.connections(11).mechanism_list={'iAMPA_TRN_PYso'};

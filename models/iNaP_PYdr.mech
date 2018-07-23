@@ -30,7 +30,9 @@ mNaPNoiseIC = 0.1
 % Functions
 Minf(X) = 0.02./(1 + exp(-(X + 42)./5))
 
+% AES
 INaP_PYdr(X,mNaP) = -gNaP.*mNaP.*(X-ENaP)
+% INaP_PYdr(X) = -gNaP.*Minf(X).*(X-ENaP)
 
 monitor INaP_PYdr
 
@@ -40,3 +42,4 @@ mNaP(0)=mNaPIC+mNaPNoiseIC*rand(1,Npop)
 
 % Interface
 @current += INaP_PYdr(X,mNaP)
+% @current += INaP_PYdr(X)

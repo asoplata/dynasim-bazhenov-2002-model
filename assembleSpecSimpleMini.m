@@ -1,7 +1,7 @@
 function specification = assembleSpecification(dt, numCellsScaledown)
-%ASSEMBLESPECIFICATION - Construct and connect the (Bazhenov et al., 2002) model
+%ASSEMBLESPECIFICATION - Construct and connect the (Krishnan et al., 2016) model
 %
-% assembleSpecification builds a (Bazhenov et al., 2002)-type DynaSim
+% assembleSpecification builds a (Krishnan et al., 2016)-type DynaSim
 % specification, including both its populations and connections from the many
 % mechanism files contained in the 'models/' subdirectory.
 %
@@ -14,20 +14,20 @@ function specification = assembleSpecification(dt, numCellsScaledown)
 %                        smaller proportion like 0.2.
 %
 % Outputs:
-%   'specification': DynaSim specification structure for the (Bazhenov
-%                    et al., 2002) model.
+%   'specification': DynaSim specification structure for the (Krishnan
+%                    et al., 2016) model.
 %
 % Note: By default, the specification output by this function is set to the
-%   'Awake' behavioral state as used in (Bazhenov et al., 2002). To change
+%   'Awake' behavioral state as used in (Krishnan et al., 2016). To change
 %   this, use the `applyExperimentFactors.m` function.
 %
 % Dependencies:
 %   - This has only been tested on MATLAB version 2017a.
 %
 % References:
-%   - Bazhenov M, Timofeev I, Steriade M, Sejnowski TJ. Model of thalamocortical
-%     slow-wave sleep oscillations and transitions to activated states. The
-%     Journal of Neuroscience. 2002;22: 8691–8704.
+%   - Krishnan GP, Chauvette S, Shamie I, Soltani S, Timofeev I, Cash SS, et
+%     al. Cellular and neurochemical basis of sleep stages in the
+%     thalamocortical network. eLife. 2016;5: e18607.
 %
 % Author: Austin E. Soplata <austin.soplata@gmail.com>
 % Copyright (C) 2018 Austin E. Soplata, Boston University, USA
@@ -104,7 +104,7 @@ specification.connections(2).direction='PYdr<-PYso';
 specification.connections(2).mechanism_list={...
     'iCOM_PYdr_PYso',...
     'iAMPAdepr_PYdr_PYso',...
-    'iMiniAMPA_PYdr_PYso',...
+    'iMiniAMPASimple_PYdr_PYso',...
     'iNMDA_PYdr_PYso'};
 
 % IN cells and intercompartmental IN connections:
@@ -138,13 +138,13 @@ specification.connections(4).mechanism_list={'iCOM_INdr_INso'};
 specification.connections(5).direction='INdr<-PYso';
 specification.connections(5).mechanism_list={...
     'iAMPAdepr_INdr_PYso',...
-    'iMiniAMPA_INdr_PYso',...
+    'iMiniAMPASimple_INdr_PYso',...
     'iNMDA_INdr_PYso'};
 
 specification.connections(6).direction='PYdr<-INso';
 specification.connections(6).mechanism_list={...
     'iGABAAdepr_PYdr_INso',...
-    'iMiniGABAA_PYdr_INso'};
+    'iMiniGABAASimple_PYdr_INso'};
 
 % -------------------------------------------------------------------
 %% 3. Assemble Thalamic Model and Intrathalamic Connections
