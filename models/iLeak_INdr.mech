@@ -20,7 +20,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Parameters
 gLeak = (1e3)/30000 % mS/cm^2
-ELeak = -68  % mV
+% AES
+% ELeak = -68  % mV
+ELeak = -70  % mV
 
 % Functions
 ILeak_INdr(X) = -gLeak.*(X-ELeak)

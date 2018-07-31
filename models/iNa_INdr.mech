@@ -23,7 +23,9 @@
 % - Tags: sodium, current, intrinsic, interneuron, dendrite
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Parameters
-gNa = 0.44 % mS/cm^2
+% AES
+% gNa = 0.44 % mS/cm^2
+gNa = 0.8 % mS/cm^2
 ENa = 50  % mV
 % The Q10 temperature adjustment values never change over the course of the
 %     simulations, so we are setting them to be constant.

@@ -82,10 +82,14 @@
 %
 gMiniGABAA = 0.12 % mS/cm^2
 EGABAA = -70        % mV
-neMiniIC = 75
-neMiniNoiseIC = 20
+% neMiniIC = 75
+neMiniIC = 0
+% neMiniNoiseIC = 20
+neMiniNoiseIC = 0
 laMiniIC = 0
 laMiniNoiseIC = 0
+laOneMiniIC = 0
+laOneMiniNoiseIC = 0
 
 miniFreq = 20 % in Hz
 % This is used both for comparing floats the correct way in
@@ -164,8 +168,8 @@ netcon = netconNearestNeighbors(2*radius, N_pre, N_post, removeRecurrentBool)
 % This checks for if there has been enough time since the last spike AND the
 %     last mini, similar to, in the original code, "currents.cpp" line 514.
 % AES
-% checkTime(t,lastRelease,newRelease) = ((t-tspike_pre)>100).*((t-lastRelease)>newRelease)
-checkTime(t,lastRelease,newRelease) = ((t-tspike_pre)>70).*((t-lastRelease)>newRelease)
+% checkTime(t,lastRelease,lastReleaseOne,newRelease) = ((t-tspike_pre)>100).*((t-lastRelease)>newRelease)
+checkTime(t,lastRelease,lastReleaseOne,newRelease) = ((t-lastReleaseOne)>70).*((t-lastRelease)>newRelease)
 
 
 % Unfortunately, due to the way DynaSim works, the "lastRelease" state variable
@@ -178,39 +182,78 @@ checkTime(t,lastRelease,newRelease) = ((t-tspike_pre)>70).*((t-lastRelease)>newR
 %     contribution themselves. Hence, for data visualization purposes, we only
 %     need to monitor "IMiniGABAA_PYdr_INso_read".
 % In other words, this is the function actually used in the simulation:
-IMiniGABAA_PYdr_INso(X,t,lastRelease,newRelease) = -(checkTime(t,lastRelease,newRelease).*(fac_MiniGABAA_PYdr_INso+fac_GABAA_cort_large_vary).*propofolMiniCondMult.*gMiniGABAA/normalizingFactor)*netcon.*(X-EGABAA)
+IMiniGABAA_PYdr_INso(X,t,lastRelease,lastReleaseOne,newRelease) = ((-(checkTime(t,lastRelease,lastReleaseOne,newRelease).*(fac_MiniGABAA_PYdr_INso+fac_GABAA_cort_large_vary).*propofolMiniCondMult.*gMiniGABAA/normalizingFactor).*depr)*netcon).*(X-EGABAA)
 
 % And this is the function that communicates the output for our analysis:
-read_IMiniGABAA_PYdr_INso(X,t,lastRelease) = -((abs(t-lastRelease)<epsilon).*(fac_MiniGABAA_PYdr_INso+fac_GABAA_cort_large_vary).*propofolMiniCondMult.*gMiniGABAA/normalizingFactor)*netcon.*(X-EGABAA)
+read_IMiniGABAA_PYdr_INso(X,t,lastRelease) = ((-((abs(t-lastRelease)<epsilon).*(fac_MiniGABAA_PYdr_INso+fac_GABAA_cort_large_vary).*propofolMiniCondMult.*gMiniGABAA/normalizingFactor).*depr)*netcon).*(X-EGABAA)
 
 IGABAAcomb_PYdr_INso(X,s,depr) = -(fac_GABAAcomb_PYdr_INso+fac_GABAA_cort_large_vary)*propofolCondMult*gGABAA/normalizingFactor.*((depr.*s)*netcon).*(X-EGABAA)
 
 % This way we record the synaptic currents!
 monitor read_IMiniGABAA_PYdr_INso
+monitor IMiniGABAA_PYdr_INso
 monitor IGABAAcomb_PYdr_INso
 
 
 % ODEs and ICs
 % The "state" of the newRelease state variable is a random minimum AMOUNT of
 %     time until the next mini can happen for that synapse. (This is where the
-%     magic happens)
+%     magic happens). newRelease is ONLY changed when a mini happens, unlike
+%     lastRelease, which changes depending on if there was either a spike OR a
+%     mini.
 % Note that `checkTime` is an internal function defined above, but
 %     `newReleaseUpdate` is an external function defined in
 %     `newReleaseUpdate.m`.
-newRelease' = checkTime(t,lastRelease,newRelease).*((newReleaseUpdate((t-tspike_pre),miniFreq,epsilon,N_pre) - newRelease)./dt)
+% AES: Note: if first lastRelease check is not satisfied but checkTime is, then
+% new newRelease value will be calculated, but does that even matter? probably
+% not
+% newRelease' = checkTime(t,lastRelease,lastReleaseOne,newRelease).*((newReleaseUpdate((t-tspike_pre),miniFreq,epsilon,N_pre) - newRelease)./dt)
+newRelease' = checkTime(t,lastRelease,lastReleaseOne,newRelease).*((newReleaseUpdate((t-lastReleaseOne),miniFreq,epsilon,N_pre) - newRelease)./dt)
+% newRelease' = 0
 newRelease(0) = neMiniIC+neMiniNoiseIC.*rand(1,N_pre)
 
 % The "state" of the lastRelease state variable is the ACTUAL time of the
-% previous mini
-lastRelease' = checkTime(t,lastRelease,newRelease).*((t - lastRelease)./dt)
+% EITHER previous mini OR spike
+% lastRelease' = checkTime(t,lastRelease,lastReleaseOne,newRelease).*((t - lastRelease)./dt)
+% lastRelease' = ((t-lastRelease-0.3-1)>0).*checkTime(t,lastRelease,lastReleaseOne,newRelease).*((t - lastRelease)./dt) + ((t-lastRelease-0.3-1)>0).*(X_pre>0).*((t - lastRelease)./dt)
+% AES no minis
+lastRelease' = ((t-lastRelease-0.3-1)>0).*checkTime(t,lastRelease,lastReleaseOne,newRelease).*((t - lastRelease)./dt) + ((t-lastRelease-0.3-1)>0).*(X_pre>0).*((t - lastRelease)./dt)
 lastRelease(0) = laMiniIC+laMiniNoiseIC.*rand(1,N_pre)
+lastReleaseOne' = ((t-lastReleaseOne-0.3-1)>0).*(X_pre>0).*((t - lastReleaseOne)./dt)
+lastReleaseOne(0) = laOneMiniIC+laOneMiniNoiseIC.*rand(1,N_pre)
 
 s' = alpha.*(1 + tanh(X_pre./4)).*(1-s) - (beta/propofolTauMult).*s
 s(0) = sGABAAIC+sGABAANoiseIC.*rand(1,N_pre)
 
 % This represents the amount of synaptic resources available
-depr' = (((t-tspike_pre)<=dt).*(((1 - (1 - depr.*(1-resUse)).*(abs(-(t-tspike_pre)/tauRecov)<10).*exp(-(t-tspike_pre)./tauRecov))-depr)./dt)) + (checkTime(t,lastRelease,newRelease).*(((1 - (1 - depr.*(1-resUseMini)).*(abs(-(t-tspike_pre)/tauRecov)<10).*exp(-(t-tspike_pre)./tauRecov))-depr)./dt))
+% depr' = (((t-tspike_pre)<=dt).*(((1 - (1 - depr.*(1-resUse)).*(abs(-(t-tspike_pre)/tauRecov)<10).*exp(-(t-tspike_pre)./tauRecov))-depr)./dt)) + (checkTime(t,lastRelease,lastReleaseOne,newRelease).*(((1 - (1 - depr.*(1-resUseMini)).*(abs(-(t-tspike_pre)/tauRecov)<10).*exp(-(t-tspike_pre)./tauRecov))-depr)./dt))
+% abs at beginning is necessary for tspike_pre initialization value of -1e6
+% depr' = ((abs(t-tspike_pre-0.3-1)<=dt).*(((1 - (1 - depr.*(1-resUse)).*(abs(-(t-tspike_pre-0.3-1)/tauRecov)<10).*exp(-(t-tspike_pre-0.3-1)./tauRecov))-depr)./dt))
+
+% Need separate checks for lastRelease and tspike_pre since we count them separately
+% depr' = ((t-abs(lastRelease)-0.3-1)>0).*(X_pre>0).*(((1 - (1 - depr.*(1-resUse)).*(abs(-(t-abs(tspike_pre)-0.3-1)/tauRecov)<10).*exp(-(t-abs(tspike_pre)-0.3-1)./tauRecov))-depr)./dt)
+% depr' = ((t-lastRelease-0.3-1)>0).*(X_pre>0).*(((1 - (1 - depr.*(1-resUse)).*(abs(-(t-tspike_pre-0.3-1)/tauRecov)<10).*exp(-(t-tspike_pre-0.3-1)./tauRecov))-depr)./dt)
+% depr' = ((t-lastRelease-0.3-1)>0).*(X_pre>0).*(((1 - (1 - depr.*(1-resUse)).*(abs(-(t-tspike_pre-0.3-1)/tauRecov)<10).*exp(-(t-tspike_pre-0.3-1)./tauRecov))-depr)./dt) + ((t-lastRelease-0.3-1)>0).*checkTime(t,lastRelease,lastReleaseOne,newRelease).*(((1 - (1 - depr.*(1-resUseMini)).*(abs(-(t-tspike_pre)/tauRecov)<10).*exp(-(t-tspike_pre)./tauRecov))-depr)./dt)
+% AES no minis
+% depr' = ((t-lastRelease-0.3-1)>0).*(X_pre>0).*(((1 - (1 - depr.*(1-resUse)).*(abs(-(t-tspike_pre-0.3-1)/tauRecov)<10).*exp(-(t-tspike_pre-0.3-1)./tauRecov))-depr)./dt)
+% dt = 0.01
+% depr' = (((t-lastRelease-0.3-1)>0).*(X_pre>0).*(((1 - (1 - depr.*(1-resUse)).*exp(-(t-tspike_pre-0.3-1)./tauRecov))-depr))./dt)
+% AES lastRelease right now is ONLY measuring spikes
+% depr' = (((t-lastRelease-0.3-1)>0).*(X_pre>0).*(((1 - (1 - depr.*(1-resUse)).*exp(-(t-lastReleaseOne-0.3-1)./tauRecov))-depr))./dt)
+depr' = (((t-lastRelease-0.3-1)>0).*(X_pre>0).*(((1 - (1 - depr.*(1-resUse)).*exp(-(t-lastReleaseOne-0.3-1)./tauRecov))-depr))./dt) + ((t-lastRelease-0.3-1)>0).*checkTime(t,lastRelease,lastReleaseOne,newRelease).*(((1 - (1 - depr.*(1-resUseMini)).*(abs(-(t-lastReleaseOne)/tauRecov)<10).*exp(-(t-lastReleaseOne)./tauRecov))-depr)./dt)
+
+
+
+% % below is definitely not right
+% depr' = (((1 - (1 - depr.*(1-((t-tspike_pre)<=dt).*resUse)).*(abs(-(t-tspike_pre)/tauRecov)<10).*exp(-(t-tspike_pre)./tauRecov))-depr)./dt)
+% depr' = (((t-tspike_pre)<=dt).*(((1 - (1 - depr.*(1-resUse)).*exp(-(t-tspike_pre)./tauRecov))-depr)./dt)) + (checkTime(t,lastRelease,lastReleaseOne,newRelease).*(((1 - (1 - depr.*(1-resUseMini)).*exp(-(t-tspike_pre)./tauRecov))-depr)./dt))
+% depr' = (((t-tspike_pre)<=dt).*(((1 - (1 - depr.*(1-resUse)).*(abs(-(t-tspike_pre)/tauRecov)<10).*exp(-(t-tspike_pre)./tauRecov))-depr)./dt))
+% depr' = (((t-lastRelease)>1).*((t-tspike_pre)>1).*(X_pre>0).*(((1 - (1 - depr.*(1-resUse)).*(abs(-(t-tspike_pre)/tauRecov)<10).*exp(-(t-tspike_pre)./tauRecov))-depr)./dt)) + (checkTime(t,lastRelease,lastReleaseOne,newRelease).*(((1 - (1 - depr.*(1-resUseMini)).*(abs(-(t-tspike_pre)/tauRecov)<10).*exp(-(t-tspike_pre)./tauRecov))-depr)./dt))
+% depr' = (((1 - (1 - depr.*(1-(X_pre>0).*resUse)).*(abs(-(t-tspike_pre)/tauRecov)<10).*exp(-(t-tspike_pre)./tauRecov))-depr)./dt)
+
+% depr' = ((1 + tanh(X_pre./4)).*(((1 - (1 - depr.*(1-resUse)).*(abs(-(t-tspike_pre)/tauRecov)<10).*exp(-(t-tspike_pre)./tauRecov))-depr)./dt)) + (checkTime(t,lastRelease,lastReleaseOne,newRelease).*(((1 - (1 - depr.*(1-resUseMini)).*(abs(-(t-tspike_pre)/tauRecov)<10).*exp(-(t-tspike_pre)./tauRecov))-depr)./dt))
+
 depr(0) = deprGABAAIC+deprGABAANoiseIC*rand(1,N_pre)
 
 % Linker
-@current += IGABAAcomb_PYdr_INso(X_post,s,depr) + IMiniGABAA_PYdr_INso(X,t,lastRelease,newRelease)
+@current += IGABAAcomb_PYdr_INso(X_post,s,depr) + IMiniGABAA_PYdr_INso(X_post,t,lastRelease,lastReleaseOne,newRelease)

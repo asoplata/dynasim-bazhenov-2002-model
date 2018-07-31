@@ -64,7 +64,10 @@ removeRecurrentBool = 1
 % Note that what is passed is 2x the radius
 netcon = netconNearestNeighbors(2*radius, N_pre, N_post, removeRecurrentBool)
 
-INMDA_PYdr_PYso(X,s) = -gNMDA/normalizingFactor.*(s*netcon).*(X-ENMDA)
+% AES
+weirdFunction(voltage) = 1./(1+exp(-(voltage - (-25))./12.5))
+
+INMDA_PYdr_PYso(X,s) = -gNMDA/normalizingFactor.*(s*netcon).*weirdFunction(X).*(X-ENMDA)
 
 % This way we record the synaptic currents!
 monitor INMDA_PYdr_PYso
