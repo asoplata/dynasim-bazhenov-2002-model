@@ -1,5 +1,5 @@
-function specification = assembleSpecNoThal(dt, numCellsScaledown)
-%ASSEMBLESPECNOTHAL - Construct and connect the (Bazhenov et al., 2002) model
+function specification = assembleSpecTeardown20180903(dt, numCellsScaledown)
+%ASSEMBLESPECCOMBINED20PY5IN - Construct and connect the (Bazhenov et al., 2002) model
 %
 % assembleSpecification builds a (Bazhenov et al., 2002)-type DynaSim
 % specification, including both its populations and connections from the many
@@ -37,15 +37,15 @@ function specification = assembleSpecNoThal(dt, numCellsScaledown)
 %% 1. Make master equations and initialize
 % -------------------------------------------------------------------
 % Define equations of cell model (same for all populations)
+%   'vIC = -68'    % mV
 eqns={
-  'dv/dt=(@current+newStim)/Cm'
+  'dv/dt=(@current)/Cm'
   'Cm = 0.75' % uF/cm^2
-  'thresh=-20'
+  'thresh=0'
   'monitor v.spikes(thresh, 1)'
   'vIC = -68'    % mV
   'vNoiseIC = 0' % mV
   'v(0) = vIC+vNoiseIC*rand(1,Npop)'
-  'newStim=0'
 };
 
 % WARNING: Until indicated otherwise, only use the 'euler' integration when
@@ -57,17 +57,17 @@ eqns={
 %     a "reduced form" derived from dv/dt=0, NOT using the normal dv/dt method.
 %     For an explanation of this, see (Chen et al., 2012) page 5, section
 %     'Intrinsic currents - cortex', first paragraph.
+%   'vIC = -68'    % mV
 eqns_soma = {
-strcat(['dv/dt=((@voltage + (kappa*S_SOMA.*(@current+newStim+6.74172)))./' ...
+strcat(['dv/dt=((@voltage + (kappa*S_SOMA.*(@current+6.74172)))./' ...
                '(1 + kappa*S_SOMA.*(@conductance)) - v(t-'],num2str(dt),'))./',num2str(dt))
   'kappa=10e3'   % kOhms
   'S_SOMA=1e-6'  % cm^2
   'vIC = -68'    % mV
   'vNoiseIC = 0' % mV
   'v(0) = vIC+vNoiseIC*rand(1,Npop)'
-  'thresh=-20'
+  'thresh=0'
   'monitor v.spikes(thresh, 1)'
-  'newStim=0'
 };
 
 % Initialize DynaSim specification structure
@@ -78,21 +78,21 @@ specification=[];
 % -------------------------------------------------------------------
 % PY cells and intercompartmental PY connections:
 specification.populations(1).name='PYdr';
-specification.populations(1).size=round(numCellsScaledown*2);
+specification.populations(1).size=round(numCellsScaledown*20);
 specification.populations(1).equations=eqns;
 specification.populations(1).mechanism_list={...
     'iAppliedCurrent',...
     'iKLeak_PYdr',...
     'iLeak_PYdr',...
-    'iNa_PYdr',...
     'iNaP_PYdr',...
+    'iNa_PYdr',...
     'iM_PYdr',...
     'CaBuffer_PYdr', 'iHVA_PYdr','iKCa_PYdr',...
     };
 
 % Note that the soma mechanisms are somewhat sensitive to initial conditions
 specification.populations(2).name='PYso';
-specification.populations(2).size=round(numCellsScaledown*2);
+specification.populations(2).size=round(numCellsScaledown*20);
 specification.populations(2).equations=eqns_soma;
 specification.populations(2).mechanism_list={...
     'iAppliedCurrent',...
@@ -105,14 +105,18 @@ specification.connections(1).direction='PYso<-PYdr';
 specification.connections(1).mechanism_list={'iCOM_PYso_PYdr'};
 specification.connections(2).direction='PYdr<-PYso';
 specification.connections(2).mechanism_list={...
-    'iCOM_PYdr_PYso'}; %,...
-%     'iAMPAdepr_PYdr_PYso',...
-%     'iMiniAMPA_PYdr_PYso',...
+    'iCOM_PYdr_PYso',...
+    'iAMPAcomb_PYdr_PYso'};%,...
+    % AES    
 %     'iNMDA_PYdr_PYso'};
+
+    % 'iAMPAdepr_PYdr_PYso',...
+    % 'iMiniAMPA_PYdr_PYso',...
+    % 'iMiniSimpleAMPA_PYdr_PYso',...
 
 % IN cells and intercompartmental IN connections:
 specification.populations(3).name='INdr';
-specification.populations(3).size=round(numCellsScaledown*2);
+specification.populations(3).size=round(numCellsScaledown*5);
 specification.populations(3).equations=eqns;
 specification.populations(3).mechanism_list={...
     'iAppliedCurrent',...
@@ -125,7 +129,7 @@ specification.populations(3).mechanism_list={...
 
 % Note that the soma mechanisms are somewhat sensitive to initial conditions
 specification.populations(4).name='INso';
-specification.populations(4).size=round(numCellsScaledown*2);
+specification.populations(4).size=round(numCellsScaledown*5);
 specification.populations(4).equations=eqns_soma;
 specification.populations(4).mechanism_list={...
     'iAppliedCurrent',...
@@ -138,23 +142,30 @@ specification.connections(3).mechanism_list={'iCOM_INso_INdr'};
 specification.connections(4).direction='INdr<-INso';
 specification.connections(4).mechanism_list={'iCOM_INdr_INso'};
 
-% % PY<->IN connections/synapses
-% specification.connections(5).direction='INdr<-PYso';
-% specification.connections(5).mechanism_list={...
-%     'iAMPAdepr_INdr_PYso',...
-%     'iMiniAMPA_INdr_PYso',...
-%     'iNMDA_INdr_PYso'};
-% 
-% specification.connections(6).direction='PYdr<-INso';
-% specification.connections(6).mechanism_list={...
-%     'iGABAAdepr_PYdr_INso',...
-%     'iMiniGABAA_PYdr_INso'};
+% PY<->IN connections/synapses
+specification.connections(5).direction='INdr<-PYso';
+specification.connections(5).mechanism_list={...
+    'iAMPAcomb_INdr_PYso'};% ,...
+    % AES    
+    % 'iNMDA_INdr_PYso'};
+    % 'iAMPAdepr_INdr_PYso',...
+    % 'iMiniAMPA_INdr_PYso',...
+    % 'iMiniSimpleAMPA_INdr_PYso',...
+
+specification.connections(6).direction='PYdr<-INso';
+specification.connections(6).mechanism_list={...
+    'iGABAAcomb_PYdr_INso'}; %,...
+    % 'iGABAAdepr_PYdr_INso',...
+    % 'iMiniGABAA_PYdr_INso'};
+    % 'iGABAAdeprCT_PYdr_INso',...
+    % 'iGABAAdeprNO_PYdr_INso',...
+    % 'iMiniSimpleGABAA_PYdr_INso'};
 
 % % -------------------------------------------------------------------
 % %% 3. Assemble Thalamic Model and Intrathalamic Connections
 % % -------------------------------------------------------------------
 % specification.populations(5).name='TC';
-% specification.populations(5).size=round(numCellsScaledown*50);
+% specification.populations(5).size=round(numCellsScaledown*1);
 % specification.populations(5).equations=eqns;
 % specification.populations(5).mechanism_list={...
 %     'iAppliedCurrent',...
@@ -165,7 +176,7 @@ specification.connections(4).mechanism_list={'iCOM_INdr_INso'};
 %     'CaBuffer_TC','iT_TC','iH_TC'};
 % 
 % specification.populations(6).name='TRN';
-% specification.populations(6).size=round(numCellsScaledown*50);
+% specification.populations(6).size=round(numCellsScaledown*1);
 % specification.populations(6).equations=eqns;
 % specification.populations(6).mechanism_list={...
 %     'iAppliedCurrent',...
@@ -183,7 +194,7 @@ specification.connections(4).mechanism_list={'iCOM_INdr_INso'};
 % specification.connections(8).mechanism_list={'iGABAA_TRN_TRN'};
 % specification.connections(9).direction='TRN<-TC';
 % specification.connections(9).mechanism_list={'iAMPA_TRN_TC'};
-% 
+
 % % -------------------------------------------------------------------
 % %% 4. Thalamo-cortical Connections
 % % -------------------------------------------------------------------

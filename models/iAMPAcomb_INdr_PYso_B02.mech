@@ -71,10 +71,14 @@ gMiniAMPA = 0.4 % mS/cm^2
 EAMPA = 0        % mV
 neMiniIC = 75
 neMiniNoiseIC = 20
+laRelIC = 0
+laRelNoiseIC = 0
+laRelOneIC = 0
+laRelOneNoiseIC = 0
 laMiniIC = 0
 laMiniNoiseIC = 0
-laOneMiniIC = 0
-laOneMiniNoiseIC = 0
+
+Rinf = 0.72
 
 miniFreq = 20 % in Hz
 % This is used both for comparing floats the correct way in
@@ -105,6 +109,8 @@ EAMPA = 0    % mV
 
 sAMPAIC = 0.1
 sAMPANoiseIC = 0.1
+sAMPAMiniIC = 0
+sAMPANoiseMiniIC = 0
 deprAMPAIC = 0.9
 deprAMPANoiseIC = 0.1
 
@@ -126,8 +132,8 @@ fac_AMPA_cort_large_vary = 0
 % The proportion of total "resources" used in each action potential
 % In the original code, this is `Use`
 % AES
-resUse = 0.07  % unitless
-% resUse = 0.073  % unitless
+% resUse = 0.07  % unitless
+resUse = 0.073  % unitless
 resUseMini = 0  % unitless
 % In the original code, this is `Tr`
 tauRecov = 700 % in ms
@@ -139,7 +145,9 @@ radius = 1
 % We also need to normalize the conductance in mS/cm^2 by the number of
 %     connections each target cell is receiving on average, so that the TOTAL sum
 %     of their conductive inputs adds to our overall maximal conductance above.
-normalizingFactor = min(((2*radius + 1) / (N_post/N_pre)), N_pre)
+% AES
+% normalizingFactor = min(((2*radius + 1) / (N_post/N_pre)), N_pre)
+normalizingFactor = 8
 
 % Functions
 % Keep connections to compartment with the same index
@@ -163,10 +171,11 @@ checkTime(t,lastRelease,lastReleaseOne,newRelease) = ((t-lastReleaseOne)>70).*((
 %     need to monitor "IMiniAMPA_INdr_PYso_read".
 % In other words, this is the function actually used in the simulation:
 % AES
-IMiniAMPA_INdr_PYso(X,t,lastRelease,lastReleaseOne,newRelease,depr) = ((-(checkTime(t,lastRelease,lastReleaseOne,newRelease).*(fac_MiniAMPA_INdr_PYso+fac_AMPA_cort_large_vary).*gMiniAMPA/normalizingFactor).*depr)*netcon).*(X-EAMPA)
+% IMiniAMPA_INdr_PYso(X,t,lastRelease,lastReleaseOne,newRelease,depr) = ((-(checkTime(t,lastRelease,lastReleaseOne,newRelease).*(fac_MiniAMPA_INdr_PYso+fac_AMPA_cort_large_vary).*gMiniAMPA/normalizingFactor).*depr)*netcon).*(X-EAMPA)
+IMiniAMPA_INdr_PYso(X,t,sMini,depr) = (-((fac_MiniAMPA_INdr_PYso+fac_AMPA_cort_large_vary).*gMiniAMPA/normalizingFactor).*(depr.*sMini)*netcon).*(X-EAMPA)
 
 % And this is the function that communicates the output for our analysis:
-read_IMiniAMPA_INdr_PYso(X,t,lastRelease,depr) = ((-((abs(t-lastRelease)<epsilon).*(fac_MiniAMPA_INdr_PYso+fac_AMPA_cort_large_vary).*gMiniAMPA/normalizingFactor).*depr)*netcon).*(X-EAMPA)
+read_IMiniAMPA_INdr_PYso(X,t,sMini,depr) = (-((fac_MiniAMPA_INdr_PYso+fac_AMPA_cort_large_vary).*gMiniAMPA/normalizingFactor).*(depr.*sMini)*netcon).*(X-EAMPA)
 
 % AES
 IAMPAcomb_INdr_PYso(X,s,depr) = -(fac_AMPAcomb_INdr_PYso+fac_AMPA_cort_large_vary)*gAMPA/normalizingFactor.*((depr.*s)*netcon).*(X-EAMPA)
@@ -189,22 +198,29 @@ newRelease(0) = neMiniIC+neMiniNoiseIC.*rand(1,N_pre)
 % The "state" of the lastRelease state variable is the ACTUAL time of the
 % previous mini
 % lastRelease' = checkTime(t,lastRelease,lastReleaseOne,newRelease).*((t - lastRelease)./dt)
-% lastRelease(0) = laMiniIC+laMiniNoiseIC.*rand(1,N_pre)
+% lastRelease(0) = laRelIC+laRelNoiseIC.*rand(1,N_pre)
 lastRelease' = ((t-lastRelease-0.3-1)>0).*checkTime(t,lastRelease,lastReleaseOne,newRelease).*((t - lastRelease)./dt) + ((t-lastRelease-0.3-1)>0).*(X_pre>0).*((t - lastRelease)./dt)
-lastRelease(0) = laMiniIC+laMiniNoiseIC.*rand(1,N_pre)
+lastRelease(0) = laRelIC+laRelNoiseIC.*rand(1,N_pre)
 lastReleaseOne' = ((t-lastReleaseOne-0.3-1)>0).*(X_pre>0).*((t - lastReleaseOne)./dt)
-lastReleaseOne(0) = laOneMiniIC+laOneMiniNoiseIC.*rand(1,N_pre)
+lastReleaseOne(0) = laRelOneIC+laRelOneNoiseIC.*rand(1,N_pre)
+lastMini' = ((t-lastRelease)>newRelease).*((t - lastMini)./dt)
+lastMini(0) = laMiniIC+laMiniNoiseIC.*rand(1,N_pre)
 
 
-s' = alpha.*(1 + tanh(X_pre./4)).*(1-s) - beta.*s
+% AES
+% s' = alpha.*(1 + tanh(X_pre./4)).*(1-s) - beta.*s
+s' = alpha.*0.7.*0.5.*(1 + tanh(X_pre./4)).*(1-s) - beta.*s
 s(0) = sAMPAIC+sAMPANoiseIC.*rand(1,N_pre)
 
+sMini' = alpha.*(((t-lastMini)<0.3)*Rinf).*(1-sMini) - beta.*sMini
+sMini(0) = sAMPAMiniIC+sAMPANoiseMiniIC.*rand(1,N_pre)
 % This represents the amount of synaptic resources available
 % depr' = (((t-tspike_pre)<=dt).*(((1 - (1 - depr.*(1-resUse)).*(abs(-(t-tspike_pre)/tauRecov)<10).*exp(-(t-tspike_pre)./tauRecov))-depr)./dt)) + (checkTime(t,lastRelease,lastReleaseOne,newRelease).*(((1 - (1 - depr.*(1-resUseMini)).*(abs(-(t-tspike_pre)/tauRecov)<10).*exp(-(t-tspike_pre)./tauRecov))-depr)./dt))
 % depr' = (((t-lastRelease)>1).*((t-tspike_pre)>1).*(X_pre>0).*(((1 - (1 - depr.*(1-resUse)).*(abs(-(t-tspike_pre)/tauRecov)<10).*exp(-(t-tspike_pre)./tauRecov))-depr)./dt)) + (checkTime(t,lastRelease,lastReleaseOne,newRelease).*(((1 - (1 - depr.*(1-resUseMini)).*(abs(-(t-tspike_pre)/tauRecov)<10).*exp(-(t-tspike_pre)./tauRecov))-depr)./dt))
 depr' = (((t-lastRelease-0.3-1)>0).*(X_pre>0).*(((1 - (1 - depr.*(1-resUse)).*exp(-(t-lastReleaseOne-0.3-1)./tauRecov))-depr))./dt) + ((t-lastRelease-0.3-1)>0).*checkTime(t,lastRelease,lastReleaseOne,newRelease).*(((1 - (1 - depr.*(1-resUseMini)).*(abs(-(t-lastReleaseOne)/tauRecov)<10).*exp(-(t-lastReleaseOne)./tauRecov))-depr)./dt)
+% depr' = ((X_pre>0).*(((1 - (1 - depr.*(1-resUse)).*exp(-(t-lastReleaseOne-0.3-1)./tauRecov))-depr))./dt) + checkTime(t,lastRelease,lastReleaseOne,newRelease).*(((1 - (1 - depr.*(1-resUseMini)).*(abs(-(t-lastReleaseOne)/tauRecov)<10).*exp(-(t-lastReleaseOne)./tauRecov))-depr)./dt)
 depr(0) = deprAMPAIC+deprAMPANoiseIC*rand(1,N_pre)
 
 % Linker
-@current += IAMPAcomb_INdr_PYso(X_post,s,depr) + IMiniAMPA_INdr_PYso(X_post,t,lastRelease,lastReleaseOne,newRelease,depr)
+@current += IAMPAcomb_INdr_PYso(X_post,s,depr) + IMiniAMPA_INdr_PYso(X_post,t,sMini,depr)
 
