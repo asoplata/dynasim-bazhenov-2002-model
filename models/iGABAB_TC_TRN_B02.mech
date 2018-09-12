@@ -1,8 +1,8 @@
-% # iGABAB_TC_TRN: Normalized synaptic GABA-Bergic inhibitory current FROM the
-%     nucleus reticular thalamic cell TO thalamocortical cell TC<-TRN
+% # iGABAB_TC_TRN_B02: Normalized synaptic GABA-Bergic inhibitory current FROM the
+%     nucleus reticular thalamic cell TO thalamocortical cell TC<-TRN_B02
 %     connection used in the DynaSim implementation of (Bazhenov et al., 2002).
 %     Note that in the original code, the class for this current is called
-%     GABA_B, and TRN cells are called RE cells.
+%     GABA_B, and TRN_B02 cells are called RE cells.
 %
 % - Source: This was built from the original paper's code, using "currents.h"
 %     lines 615-651, 1162, "currents.cpp" lines 316-343, "CellSyn.h" lines
@@ -24,15 +24,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Parameters
 %
-% For the TRN (RE) to TC connection, the conductance is given by the original
-%     paper "absolutely" as 0.02 uS. However, in the original code, the value
-%     is given in unknown units as 0.000002, but we will begin by using the
-%     paper value. We first need to normalize this value over the area of the
-%     target cell and convert the conductance to mS/cm^2. We do this by
-%     converting uS to mS and dividing by the area of the target TC neurons:
-%
-%    0.02 uS * (1 mS / 1000 uS) * (1 / 2.9e-4 cm^2)) = 0.07 mS/cm^2
-%
+
 gGABAB = 0.07  % mS/cm^2
 EGABAB = -95   % mV
 rGABABIC = 0.1
@@ -47,7 +39,7 @@ k4 = 0.034    % ms^{-1}
 
 % In the original code, this sleep stage experimental factor is represented by
 %     `fac_GABA_TC`
-fac_GABAB_TC_TRN = 1
+fac_GABAB_TC_TRN_B02 = 1
 
 % This is our DynaSim-varied, cell-type-NONspecific adjustment factor
 fac_GABA_thal_large_vary = 0
@@ -68,10 +60,10 @@ removeRecurrentBool = 0
 % Note that what is passed is 2x the radius
 netcon = netconNearestNeighbors(2*radius, N_pre, N_post, removeRecurrentBool)
 
-IGABAB_TC_TRN(X,g) = -(fac_GABAB_TC_TRN+fac_GABA_thal_large_vary)*gGABAB/normalizingFactor.*((g.^4./(g.^4 + 100))*netcon).*(X-EGABAB)
+IGABAB_TC_TRN_B02(X,g) = -(fac_GABAB_TC_TRN_B02+fac_GABA_thal_large_vary)*gGABAB/normalizingFactor.*((g.^4./(g.^4 + 100))*netcon).*(X-EGABAB)
 
 % This way we record the synaptic currents!
-monitor IGABAB_TC_TRN
+monitor IGABAB_TC_TRN_B02
 
 
 % ODEs and ICs
@@ -82,4 +74,4 @@ g(0) = gGABABIC+gGABABNoiseIC.*rand(1,N_pre)
 
 
 % Linker
-@current += IGABAB_TC_TRN(X_post,g)
+@current += IGABAB_TC_TRN_B02(X_post,g)

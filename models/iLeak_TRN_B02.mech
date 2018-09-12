@@ -1,4 +1,4 @@
-% # iLeak_TRN: Leak current for generic thalamic reticular cells used in the
+% # iLeak_TRN_B02: Leak current for generic thalamic reticular cells used in the
 %     DynaSim implementation of (Bazhenov et al., 2002). Note that in the
 %     original code, this celltype is called RE.
 %
@@ -17,9 +17,9 @@ gLeak = 0.05; % mS/cm^2
 ELeak = -77;  % mV
 
 % Functions
-ILeak_TRN(X) = -gLeak.*(X-ELeak)
+ILeak_TRN_B02(X) = -gLeak.*(X-ELeak)
 
-monitor ILeak_TRN
+monitor ILeak_TRN_B02
 
 % Linker
-@current += ILeak_TRN(X)
+@current += ILeak_TRN_B02(X)

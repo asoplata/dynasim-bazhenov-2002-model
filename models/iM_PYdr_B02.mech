@@ -1,4 +1,4 @@
-% # iM_PYdr: Slow voltage-dependent non-inactivating potassium current,
+% # iM_PYdr_B02: Slow voltage-dependent non-inactivating potassium current,
 %     for generic pyramidal dendrite compartments used in the DynaSim
 %     implementation of (Bazhenov et al., 2002). Note that in the original
 %     code, this compartment/cell type is called CX or CX_DEND, and this
@@ -23,7 +23,7 @@ gM = 0.01 % mS/cm^2
 EM = -90   % mV
 % In the original code, this sleep stage experimental factor is represented by
 %     `fac_gkm_cx`
-fac_M_PYdr = 1
+fac_M_PYdr_B02 = 1
 
 %% Not sure what these parameters actually represent
 tha = -30   % mV, but unknown meaning
@@ -40,13 +40,13 @@ alphaM(X) = 0.001.*(X - tha)./(1 - exp(-(X - tha)./qa))
 betaM(X) = -0.001.*(X - tha)./(1 - exp( (X - tha)./qa))
 tauM(X) = (1./(alphaM(X) + betaM(X)))./phiM
 Minf(X) = alphaM(X)./(alphaM(X) + betaM(X))
-IM_PYdr(X,mM) = -phiM.*fac_M_PYdr .*gM.*mM.*(X-EM)
+IM_PYdr_B02(X,mM) = -phiM.*fac_M_PYdr_B02 .*gM.*mM.*(X-EM)
 
-monitor IM_PYdr
+monitor IM_PYdr_B02
 
 % ODEs and ICs
 mM' = (Minf(X)-mM)./tauM(X)
 mM(0)=mMIC+mMNoiseIC.*rand(1,Npop)
 
 % Interface
-@current += IM_PYdr(X,mM)
+@current += IM_PYdr_B02(X,mM)

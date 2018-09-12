@@ -1,8 +1,8 @@
-% # iAMPA_TC_PYso: Normalized synaptic AMPAergic excitatory current FROM the
-%     pyramidal axo-soma compartment TO thalamocortical cell TC<-PYso
+% # iAMPA_TC_PYso_B02: Normalized synaptic AMPAergic excitatory current FROM the
+%     pyramidal axo-soma compartment TO thalamocortical cell TC<-PYso_B02
 %     connection used in the DynaSim implementation of (Bazhenov et al., 2002).
 %     Note that in the original code, the class for this current is called
-%     AMPA, and PYso are called CX or CX_SOMA. Also note that, instead of using
+%     AMPA, and PYso_B02 are called CX or CX_SOMA. Also note that, instead of using
 %     a Heaviside increase in transmitter concentration upon spike detection,
 %     we used the (1 + tanh(V/4)) formulation from (Ermentrout & Kopell, 1998)
 %     for our spike detector and transmitter concentration model.
@@ -26,14 +26,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Parameters
 %
-% For the PYso to TC connection, the conductance is given by the original
-%     paper "absolutely" as 0.005 uS. We first need to normalize this value over
-%     the area of the target cell and convert the conductance to mS/cm^2. We do
-%     this by converting uS to mS and dividing by the area of the target TC
-%     cells:
-%
-%    0.005 uS * (1 mS / 1000 uS) * (1 / (2.9e-4 cm^2)) = 0.0172 mS/cm^2
-%
+
 gAMPA = 0.0172 % mS/cm^2
 EAMPA = 0    % mV
 sAMPAIC = 0.1
@@ -46,7 +39,7 @@ beta  = 0.19 % ms^-1
 
 % In the original code, this sleep stage experimental factor is represented by
 %     `fac_AMPA_TC`
-fac_AMPA_TC_PYso = 1
+fac_AMPA_TC_PYso_B02 = 1
 
 % Connective radius, aka how many target cells each source cell connects to,
 %     from the source's perspective.
@@ -63,14 +56,14 @@ removeRecurrentBool = 0
 % Note that what is passed is 2x the radius
 netcon = netconNearestNeighbors(2*radius, N_pre, N_post, removeRecurrentBool)
 
-IAMPA_TC_PYso(X,s) = -fac_AMPA_TC_PYso*gAMPA/normalizingFactor.*(s*netcon).*(X-EAMPA)
+IAMPA_TC_PYso_B02(X,s) = -fac_AMPA_TC_PYso_B02*gAMPA/normalizingFactor.*(s*netcon).*(X-EAMPA)
 
 % This way we record the synaptic currents!
-monitor IAMPA_TC_PYso
+monitor IAMPA_TC_PYso_B02
 
 % ODEs and ICs
 s' = alpha.*(1 + tanh(X_pre./4)).*(1-s) - beta.*s
 s(0) = sAMPAIC+sAMPANoiseIC.*rand(1,N_pre)
 
 % Linker
-@current += IAMPA_TC_PYso(X_post,s)
+@current += IAMPA_TC_PYso_B02(X_post,s)

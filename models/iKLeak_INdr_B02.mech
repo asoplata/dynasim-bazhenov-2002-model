@@ -1,4 +1,4 @@
-% # iKLeak_INdr: Potassium Leak current, Hodgkin-Huxley-style, for generic
+% # iKLeak_INdr_B02: Potassium Leak current, Hodgkin-Huxley-style, for generic
 %     interneuron dendrite compartments used in the DynaSim implementation of
 %     (Bazhenov et al., 2002). Note that in the original code, this
 %     compartment/cell type is called CX, CX_DEND, and sometimes IN, and this
@@ -21,15 +21,15 @@ EKLeak = -95    % mV
 
 % In the original code, this sleep stage experimental factor is represented by
 %     `fac_gkl`
-fac_KLeak_INdr = 1
+fac_KLeak_INdr_B02 = 1
 
 % This is our DynaSim-varied, cell-type-NONspecific adjustment factor
 fac_KLeak_cort_large_vary = 0
 
 % Functions
-IKLeak_INdr(X) = -(fac_KLeak_INdr+fac_KLeak_cort_large_vary).*gKLeak.*(X-EKLeak)
+IKLeak_INdr_B02(X) = -(fac_KLeak_INdr_B02+fac_KLeak_cort_large_vary).*gKLeak.*(X-EKLeak)
 
-monitor IKLeak_INdr
+monitor IKLeak_INdr_B02
 
 % Linker
-@current += IKLeak_INdr(X)
+@current += IKLeak_INdr_B02(X)

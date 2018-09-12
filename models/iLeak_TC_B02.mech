@@ -1,4 +1,4 @@
-% # iLeak_TC: Leak current for generic thalamocortical relay cells used in the
+% # iLeak_TC_B02: Leak current for generic thalamocortical relay cells used in the
 %     DynaSim implementation of (Bazhenov et al., 2002).
 %
 % - Source: This was built from the original paper's code, using "currents.h"
@@ -16,9 +16,9 @@ gLeak = 0.01; % mS/cm^2
 ELeak = -70;  % mV
 
 % Functions
-ILeak_TC(X) = -gLeak.*(X-ELeak)
+ILeak_TC_B02(X) = -gLeak.*(X-ELeak)
 
-monitor ILeak_TC
+monitor ILeak_TC_B02
 
 % Linker
-@current += ILeak_TC(X)
+@current += ILeak_TC_B02(X)

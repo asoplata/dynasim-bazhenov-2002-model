@@ -1,5 +1,5 @@
-% # iCOM_INso_INdr: Simple ohmic axial current for connecting FROM one IN cell
-%     dendrite TO the corresponding IN cell axo-soma INso<-INdr used in the
+% # iCOM_INso_INdr_B02: Simple ohmic axial current for connecting FROM one IN cell
+%     dendrite TO the corresponding IN cell axo-soma INso<-INdr_B02 used in the
 %     DynaSim implementation of (Bazhenov et al., 2002). Note that in the
 %     original code, this cell type is called CX and sometimes IN, while the
 %     compartments are called CX_DEND or CX_SOMA.

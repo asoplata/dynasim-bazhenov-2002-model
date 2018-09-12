@@ -1,4 +1,4 @@
-% # iKLeak_TC: Potassium Leak current for generic thalamocortical relay
+% # iKLeak_TC_B02: Potassium Leak current for generic thalamocortical relay
 %     cells used in the DynaSim implementation of (Bazhenov et al., 2002).
 %
 % - Source: This was built from the original paper's code, using "currents.h"
@@ -15,13 +15,13 @@
 gKLeak = 0.03   % mS/cm^2
 EKLeak = -95    % mV
 % In the original code, this sleep stage experimental factor is represented by
-%     `fac_gkl_TC`
-fac_KLeak_TC = 1  % unitless
+%     `fac_gkl_TC_B02`
+fac_KLeak_TC_B02 = 1  % unitless
 
 % Functions
-IKLeak_TC(X) = -fac_KLeak_TC.*gKLeak.*(X-EKLeak)
+IKLeak_TC_B02(X) = -fac_KLeak_TC_B02.*gKLeak.*(X-EKLeak)
 
-monitor IKLeak_TC
+monitor IKLeak_TC_B02
 
 % Linker
-@current += IKLeak_TC(X)
+@current += IKLeak_TC_B02(X)

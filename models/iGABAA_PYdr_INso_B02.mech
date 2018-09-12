@@ -1,4 +1,4 @@
-% # iGABAAcomb_PYdr_INso: Normalized synaptic GABA-Aergic inhibitory
+% # iGABAA_PYdr_INso: Normalized synaptic GABA-Aergic inhibitory
 
 % AES omfg
 
@@ -139,7 +139,7 @@ beta  = 0.25 % ms^-1
 
 % In the original code, this sleep stage experimental factor is represented by
 %     `fac_GABA_D2`
-fac_GABAAcomb_PYdr_INso = 1
+fac_GABAA_PYdr_INso = 1
 
 % This is our DynaSim-varied, cell-type-NONspecific adjustment factor
 fac_GABAA_cort_large_vary = 0
@@ -195,12 +195,12 @@ IMiniGABAA_PYdr_INso(X,t,sMini,depr) = (-((fac_MiniGABAA_PYdr_INso+fac_GABAA_cor
 % And this is the function that communicates the output for our analysis:
 read_IMiniGABAA_PYdr_INso(X,t,sMini,depr) = (-((fac_MiniGABAA_PYdr_INso+fac_GABAA_cort_large_vary).*propofolMiniCondMult.*gMiniGABAA/normalizingFactor).*(depr.*sMini)*netcon).*(X-EGABAA)
 
-IGABAAcomb_PYdr_INso(X,s,depr) = -(fac_GABAAcomb_PYdr_INso+fac_GABAA_cort_large_vary)*propofolCondMult*gGABAA/normalizingFactor.*((depr.*s)*netcon).*(X-EGABAA)
+IGABAA_PYdr_INso(X,s,depr) = -(fac_GABAA_PYdr_INso+fac_GABAA_cort_large_vary)*propofolCondMult*gGABAA/normalizingFactor.*((depr.*s)*netcon).*(X-EGABAA)
 
 % This way we record the synaptic currents!
 monitor read_IMiniGABAA_PYdr_INso
 monitor IMiniGABAA_PYdr_INso
-monitor IGABAAcomb_PYdr_INso
+monitor IGABAA_PYdr_INso
 
 
 % ODEs and ICs
@@ -272,4 +272,4 @@ depr' = (((t-lastRelease-0.3-1)>0).*(X_pre>0).*(((1 - (1 - depr.*(1-resUse)).*ex
 depr(0) = deprGABAAIC+deprGABAANoiseIC*rand(1,N_pre)
 
 % Linker
-@current += IGABAAcomb_PYdr_INso(X_post,s,depr) + IMiniGABAA_PYdr_INso(X_post,t,sMini,depr)
+@current += IGABAA_PYdr_INso(X_post,s,depr) + IMiniGABAA_PYdr_INso(X_post,t,sMini,depr)

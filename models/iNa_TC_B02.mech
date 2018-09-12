@@ -1,4 +1,4 @@
-% # iNa_TC: Fast sodium current for generic thalamocortical cells used in the
+% # iNa_TC_B02: Fast sodium current for generic thalamocortical cells used in the
 %     DynaSim implementation of (Bazhenov et al., 2002). Note that in the
 %     original code, this current is called INaK.
 %
@@ -23,7 +23,7 @@ ENa = 50     % mV
 
 % In the original code, vShift is called `Vtr` and is initially set as -50 in
 %     the currents.h INaK current constructor, but later changed to -40 in the
-%     CellSyn.h TCcore constructor. Also note that, while voltage shifts are
+%     CellSyn.h TC_B02core constructor. Also note that, while voltage shifts are
 %     usually simply positive values added to the voltage in the alpha and beta
 %     rate equations, in the original code of this current, each alpha/beta
 %     usage of voltage is (v - Vtr) where Vtr is negative, which is what we do
@@ -50,9 +50,9 @@ betaH(X) =  4./(exp((40 - (X-vShift))./5) + 1)
 tauH(X) = 1./(alphaH(X) + betaH(X))
 Hinf(X) = alphaH(X)./(alphaH(X) + betaH(X))
 
-INa_TC(X,mNa,hNa) = -gNa.*mNa.^3.*hNa.*(X-ENa)
+INa_TC_B02(X,mNa,hNa) = -gNa.*mNa.^3.*hNa.*(X-ENa)
 
-monitor INa_TC
+monitor INa_TC_B02
 
 % ODEs and ICs
 mNa' = (Minf(X)-mNa)./tauM(X)
@@ -61,4 +61,4 @@ hNa' = (Hinf(X)-hNa)./tauH(X)
 hNa(0)=hNaIC+hNaNoiseIC.*rand(1,Npop)
 
 % Linker
-@current += INa_TC(X,mNa,hNa)
+@current += INa_TC_B02(X,mNa,hNa)

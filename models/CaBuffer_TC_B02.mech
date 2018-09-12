@@ -1,22 +1,22 @@
-% # CaBuffer_TC: Calcium buffer concentration dynamics, for generic
+% # CaBuffer_TC_B02: Calcium buffer concentration dynamics, for generic
 %     thalamocortical relay cells used in the DynaSim implementation of
 %     (Bazhenov et al., 2002). Note that in the original code, this is
 %     identified as ICa, even though it is not a current.
 %
-% - Source: This was built from the original paper's code, using "currents.h"
-%     lines 339-340, 1156, "currents.cpp" lines 133-139, 1047, and "CellSyn.h"
-%     line 62.
+% - Requires: "@IT_TC_B02" exposed by "iT_TC_B02" mechanism (which is
+%     called "IT_TC", NOT ICa, in the original code).
+%
+% - Exposes: calcium concentration "@CaBuffer_TC_B02" required for
+%     "iH_TC_B02" and "iT_TC_B02" mechanisms
 %
 % - References:
 %     - Bazhenov M, Timofeev I, Steriade M, Sejnowski TJ. Model of thalamocortical
 %         slow-wave sleep oscillations and transitions to activated states. The
 %         Journal of Neuroscience. 2002;22: 8691–8704.
-%
-% - Requires: "@IT_TC" exposed by "iT_TC" mechanism (which is,
-%     confusingly, called "IT_TC", NOT ICa, in the original code).
-%
-% - Exposes: calcium concentration "@CaBuffer_TC" required for
-%     "iH_TC" and "iT_TC" mechanisms
+%     - Chen J-Y, Chauvette S, Skorheim S, Timofeev I, Bazhenov M.
+%         Interneuron-mediated inhibition synchronizes neuronal activity during
+%         slow oscillation. The Journal of Physiology. 2012;590: 3987–4010.
+%         doi:10.1113/jphysiol.2012.227462
 %
 % - Tags: calcium, intrinsic, thalamocortical
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -24,8 +24,7 @@
 tauR = 5         % ms
 Ca_inf = 0.00024 % mM of calcium, aka 2.4e-4
 D = 2            % unitless conversion factor, unclear purpose
-% See "Interneuron-mediated inhibition synchronizes neuronal activity during
-%     slow oscillation" Chen et al., 2012, Equation 5:
+% See (Chen et al., 2012) Equation 5:
 A = 10/(2*96489) % mM cm^2/(ms uA) drive conversion of Ca-modifying currents
 CaBufferIC = 0.000001
 CaBufferNoiseIC = 0.0001
@@ -33,11 +32,11 @@ CaBufferNoiseIC = 0.0001
 % ODEs
 % In original code, the CaBuffer requires input only from IT_TC, but it used by
 %     IT_TC and Ih_TC. Specifically, "iT" seems to be a locally-defined
-%     variable (defined by IT_TC) for each TC cell that is fed into CaBufferICa at
-%     currents.cpp line 1047. In other words, the CaBuffer relies on IT_TC
+%     variable (defined by IT_TC) for each TC cell that is fed into CaBuffer/ICa
+%     at currents.cpp line 1047. In other words, the CaBuffer relies on IT_TC
 %     only.
-CaBuffer_TC' = max(-A.*@IT_TC./D, 0) + (Ca_inf - CaBuffer_TC)./tauR
-CaBuffer_TC(0) = CaBufferIC+CaBufferNoiseIC.*rand(1,Npop)
+CaBuffer_TC_B02' = max(-A.*@IT_TC_B02./D, 0) + (Ca_inf - CaBuffer_TC_B02)./tauR
+CaBuffer_TC_B02(0) = CaBufferIC+CaBufferNoiseIC.*rand(1,Npop)
 
 % Interface
-@CaBuffer_TC += CaBuffer_TC
+@CaBuffer_TC_B02 += CaBuffer_TC_B02

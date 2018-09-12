@@ -1,6 +1,6 @@
-% # iAMPAdepr_PYdr_TC: Normalized synaptic AMPAergic excitatory current,
+% # iAMPAdepr_PYdr_TC_B02: Normalized synaptic AMPAergic excitatory current,
 %     with synaptic depression, FROM the thalamocortical cell TO pyramidal
-%     dendrite PYdr<-TC connection used in the DynaSim implementation of
+%     dendrite PYdr<-TC_B02 connection used in the DynaSim implementation of
 %     (Bazhenov et al., 2002). Note that in the original code, the class for
 %     this current is called AMPA_D2, and PYdr are called CX or CX_DEND. Also
 %     note that, instead of using a Heaviside increase in transmitter
@@ -26,15 +26,6 @@
 % - Tags: synapse, connection, excitation, ampa
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Parameters
-%
-% For the TC to PYdr connection, the conductance is given by the original
-%     paper "absolutely" as 0.02 uS. We first need to normalize this value over
-%     the area of the target cell and convert the conductance to mS/cm^2. We do
-%     this by converting uS to mS and dividing by the area of the target PYdr
-%     compartments:
-%
-%    0.02 uS * (1 mS / 1000 uS) * (1 / (165*1e-6 cm^2)) = 0.12 mS/cm^2
-%
 gAMPA = 0.12 % mS/cm^2
 EAMPA = 0    % mV
 sAMPAIC = 0.1
@@ -49,7 +40,7 @@ beta  = 0.19 % ms^-1
 
 % In the original code, this sleep stage experimental factor is represented by
 %     `fac_AMPA_D2`
-fac_AMPAdepr_PYdr_TC = 1
+fac_AMPAdepr_PYdr_TC_B02 = 1
 
 % This is our DynaSim-varied, cell-type-NONspecific adjustment factor
 fac_AMPA_cort_large_vary = 0
@@ -76,9 +67,9 @@ removeRecurrentBool = 0
 % Note that what is passed is 2x the radius
 netcon = netconNearestNeighbors(2*radius, N_pre, N_post, removeRecurrentBool)
 
-IAMPAdepr_PYdr_TC(X,s,depr) = -(fac_AMPAdepr_PYdr_TC+fac_AMPA_cort_large_vary)*gAMPA/normalizingFactor.*((depr.*s)*netcon).*(X-EAMPA)
+IAMPAdepr_PYdr_TC_B02(X,s,depr) = -(fac_AMPAdepr_PYdr_TC_B02+fac_AMPA_cort_large_vary)*gAMPA/normalizingFactor.*((depr.*s)*netcon).*(X-EAMPA)
 
-monitor IAMPAdepr_PYdr_TC
+monitor IAMPAdepr_PYdr_TC_B02
 
 
 % ODEs and ICs
@@ -91,4 +82,4 @@ depr(0) = deprAMPAIC+deprAMPANoiseIC*rand(1,N_pre)
 
 
 % Linker
-@current += IAMPAdepr_PYdr_TC(X_post,s,depr)
+@current += IAMPAdepr_PYdr_TC_B02(X_post,s,depr)

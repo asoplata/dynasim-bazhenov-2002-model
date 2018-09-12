@@ -1,4 +1,4 @@
-% # iKLeak_TRN: Potassium Leak current for generic thalamic reticular cells
+% # iKLeak_TRN_B02: Potassium Leak current for generic thalamic reticular cells
 %     used in the DynaSim implementation of (Bazhenov et al., 2002). Note that
 %     in the original code, this celltype is called RE.
 %
@@ -18,12 +18,12 @@ EKLeak = -95    % mV
 
 % In the original code, this sleep stage experimental factor is represented by
 %     `fac_gkl_RE`
-fac_KLeak_TRN = 1  % unitless
+fac_KLeak_TRN_B02 = 1  % unitless
 
 % Functions
-IKLeak_TRN(X) = -fac_KLeak_TRN.*gKLeak.*(X-EKLeak)
+IKLeak_TRN_B02(X) = -fac_KLeak_TRN_B02.*gKLeak.*(X-EKLeak)
 
-monitor IKLeak_TRN
+monitor IKLeak_TRN_B02
 
 % Linker
-@current += IKLeak_TRN(X)
+@current += IKLeak_TRN_B02(X)

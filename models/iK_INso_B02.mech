@@ -1,4 +1,4 @@
-% # iK_INso: Fast delayed rectifier potassium current, for generic
+% # iK_INso_B02: Fast delayed rectifier potassium current, for generic
 %     interneuron soma compartments used in the DynaSim implementation of
 %     (Bazhenov et al., 2002). Note that in the original code, this
 %     compartment/cell type is called CX, CX_SOMA, and sometimes IN, and this
@@ -16,13 +16,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Parameters
 gK = 200   % mS/cm^2
-% AES
-% gK = 177   % mS/cm^2
 EK = -90    % mV
 
 % In the original code, this sleep stage experimental factor is represented by
 %     `fac_gkv_cx`
-fac_K_INso = 1
+fac_K_INso_B02 = 1
 
 % Not sure what these parameters actually represent
 tha = 25   % mV, but unknown meaning
@@ -42,25 +40,25 @@ betaN(X) = -0.002.*(X - tha)./(1 - exp( (X - tha)./qa))
 tauN(X) = (1./(alphaN(X) + betaN(X)))./phiN
 Ninf(X) = alphaN(X)./(alphaN(X) + betaN(X))
 
-% Instead of the INso axo-somatic compartment calculating the dv/dt the normal
+% Instead of the INso_B02 axo-somatic compartment calculating the dv/dt the normal
 %     way, they solve for just v using the "steady-state" values of the system.
 %     This means that we have to calculate different parts of the current/etc.
 %     differently. For the clearest explanation, see variable `eqns_soma` in
 %     the runscript.
 % Note that the below doesn't contain the voltage of the soma. This is
 %     analogous to the corresponding part of `g2_SOMA` in the original code:
-curr_K_INso(X,nK) = phiN.*fac_K_INso.*gK.*nK.*EK
+curr_K_INso_B02(X,nK) = phiN.*fac_K_INso_B02.*gK.*nK.*EK
 % Note that the below doesn't contain any voltages. This is
 %     analogous to the corresponding part of `g1_SOMA` in the original code:
-cond_K_INso(X,nK) = phiN.*fac_K_INso.*gK.*nK
+cond_K_INso_B02(X,nK) = phiN.*fac_K_INso_B02.*gK.*nK
 
-monitor curr_K_INso
-monitor cond_K_INso
+monitor curr_K_INso_B02
+monitor cond_K_INso_B02
 
 % ODEs and ICs
 nK' = (Ninf(X)-nK)./tauN(X)
 nK(0)=nKIC+nKNoiseIC.*rand(1,Npop)
 
 % Interface
-@current += curr_K_INso(X,nK)
-@conductance += cond_K_INso(X,nK)
+@current += curr_K_INso_B02(X,nK)
+@conductance += cond_K_INso_B02(X,nK)

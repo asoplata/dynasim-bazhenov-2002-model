@@ -1,7 +1,7 @@
-% # iT_TC: T-type Low-threshold Calcium current, Hodgkin-Huxley-style,
+% # iT_TC_B02: T-type Low-threshold Calcium current, Hodgkin-Huxley-style,
 %     for generic thalamocortical compartments, corresponding to CaV 3.1, used
 %     in the DynaSim implementation of (Bazhenov et al., 2002). Note that in
-%     the original code, this current is called IT_TC, and in the original
+%     the original code, this current is called IT_TC_B02, and in the original
 %     paper it is called iLCa. Additionally, the ICa identifier in the original
 %     code refers to the calcium buffer concentration dynamics, NOT the calcium
 %     current.
@@ -23,10 +23,10 @@
 %         of ferret thalamic slices. Journal of Neurophysiology. 1996;76:
 %         2049–2070.
 %
-% - Requires: @CaBuffer_TC calcium concentration exposed by
-%     "CaBuffer_TC" mechanism
+% - Requires: @CaBuffer_TC_B02 calcium concentration exposed by
+%     "CaBuffer_TC_B02" mechanism
 %
-% - Exposes: @IT_TC calcium current as required by "CaBuffer_TC"
+% - Exposes: @IT_TC_B02 calcium current as required by "CaBuffer_TC_B02"
 %
 % - Tags: calcium, current, intrinsic, thalamocortical
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -44,15 +44,15 @@ hTIC = 0.35
 hTNoiseIC = 0.1
 
 % Functions
-ET(CaBuffer_TC) = 1000.*8.31441.*(273.15+36)./(2.*96846).*log(2./CaBuffer_TC) % mV
+ET(CaBuffer_TC_B02) = 1000.*8.31441.*(273.15+36)./(2.*96846).*log(2./CaBuffer_TC_B02) % mV
 Minf(X)  = 1./(1+exp((-(X+vShift+57))./6.2))
 Hinf(X)  = 1./(1+exp((X+vShift+81)./4))
 tauM(X)  = (1./(exp(-(X+131.6)./16.7)+exp((X+16.8)./18.2)) + 0.612)./phiM
 tauH(X)  = (30.8+(211.4+exp((X+vShift+113.2)./5))./(1+exp((X+vShift+84)./3.2)))./phiH
 % Note: For why the current term was not made negative, see below.
-IT_TC(X,mT,hT,CaBuffer_TC) = gT.*mT.^2.*hT.*(X-ET(@CaBuffer_TC))
+IT_TC_B02(X,mT,hT,CaBuffer_TC_B02) = gT.*mT.^2.*hT.*(X-ET(@CaBuffer_TC_B02))
 
-monitor IT_TC
+monitor IT_TC_B02
 
 % ODEs and ICs
 mT' = (Minf(X)-mT)./tauM(X)
@@ -63,7 +63,7 @@ hT(0)=hTIC+hTNoiseIC.*rand(1,Npop)
 % Interface
 % Note: Usually in DynaSim, the current is made negative before being assigned
 %     to a linker, but in this case, the below is less confusing since exposing
-%     IT_TC for the CaBuffer_TC mechanism requires a
-%     not-made-negative version of IT_TC.
-@current += -IT_TC(X,mT,hT,CaBuffer_TC)
-@IT_TC += IT_TC(X,mT,hT,CaBuffer_TC)
+%     IT_TC_B02 for the CaBuffer_TC_B02 mechanism requires a
+%     not-made-negative version of IT_TC_B02.
+@current += -IT_TC_B02(X,mT,hT,CaBuffer_TC_B02)
+@IT_TC_B02 += IT_TC_B02(X,mT,hT,CaBuffer_TC_B02)

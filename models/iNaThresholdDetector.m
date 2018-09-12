@@ -18,8 +18,8 @@ function rateValue = iNaThresholdDetector(v, thr, a, q)
 rateValue = zeros(1, length(v));
 
 for ii=1:length(v)
-    % if abs((v(ii) - thr)./q) > 0.000001
-    if abs(v(ii)./thr) > 0.000001
+    if abs((v(ii) - thr)./q) > 0.000001
+    % if abs(v(ii)./thr) > 0.000001
         rateValue(ii) = a.*(v(ii)-thr)./(1 - exp(-(v(ii)-thr)./q));
     else
         rateValue(ii) = a.*q;

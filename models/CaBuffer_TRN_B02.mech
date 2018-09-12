@@ -1,22 +1,23 @@
-% # CaBuffer_TRN: Calcium buffer concentration dynamics, for generic
+% # CaBuffer_TRN_B02: Calcium buffer concentration dynamics, for generic
 %     thalamic reticular cells used in the DynaSim implementation of (Bazhenov
 %     et al., 2002). Note that in the original code, this celltype is called
 %     RE, and this mechanism is identified as ICa, even though it is not a
 %     current.
 %
-% - Source: This was built from the original paper's code, using "currents.h"
-%     lines 339-340, 1119 and "currents.cpp" lines 133-139, 1029.
+% - Requires: "@IT_TRN_B02" exposed by "iT_TRN_B02" mechanism (which is
+%     called "IT_RE", NOT ICa, in the original code).
+%
+% - Exposes: calcium concentration "@CaBuffer_TRN_B02" required for
+%     "iT_TRN_B02" mechanism
 %
 % - References:
 %     - Bazhenov M, Timofeev I, Steriade M, Sejnowski TJ. Model of thalamocortical
 %         slow-wave sleep oscillations and transitions to activated states. The
 %         Journal of Neuroscience. 2002;22: 8691–8704.
-%
-% - Requires: "@IT_TRN" exposed by "iT_TRN" mechanism (which is,
-%     confusingly, called "IT_RE", NOT ICa, in the original code).
-%
-% - Exposes: calcium concentration "@CaBuffer_TRN" required for
-%     "iT_TRN" mechanism
+%     - Chen J-Y, Chauvette S, Skorheim S, Timofeev I, Bazhenov M.
+%         Interneuron-mediated inhibition synchronizes neuronal activity during
+%         slow oscillation. The Journal of Physiology. 2012;590: 3987–4010.
+%         doi:10.1113/jphysiol.2012.227462
 %
 % - Tags: calcium, intrinsic, thalamus, reticular
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -24,16 +25,15 @@
 tauR = 5         % ms
 Ca_inf = 0.00024 % mM of calcium, aka 2.4e-4
 D = 1            % unitless conversion factor, unclear purpose
-% See "Interneuron-mediated inhibition synchronizes neuronal activity during slow
-%     oscillation" Chen et al., 2012, Equation 5:
+% See (Chen et al., 2012) Equation 5:
 A = 10/(2*96489) % mM cm^2/(ms uA) drive conversion of Ca-modifying currents
 CaBufferIC = 0.000001
 CaBufferNoiseIC = 0.0001
 
 % ODEs
 % In original code, the CaBuffer requires input only from IT_RE
-CaBuffer_TRN' = max(-A.*@IT_TRN./D, 0) + (Ca_inf - CaBuffer_TRN)./tauR
-CaBuffer_TRN(0) = CaBufferIC+CaBufferNoiseIC.*rand(1,Npop)
+CaBuffer_TRN_B02' = max(-A.*@IT_TRN_B02./D, 0) + (Ca_inf - CaBuffer_TRN_B02)./tauR
+CaBuffer_TRN_B02(0) = CaBufferIC+CaBufferNoiseIC.*rand(1,Npop)
 
 % Interface
-@CaBuffer_TRN += CaBuffer_TRN
+@CaBuffer_TRN_B02 += CaBuffer_TRN_B02

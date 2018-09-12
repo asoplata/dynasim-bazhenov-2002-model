@@ -1,7 +1,7 @@
-% # iNMDA_PYdr_PYso: Normalized synaptic NMDAergic excitatory current FROM the
-%     pyramidal axo-soma TO pyramidal dendrite PYdr<-PYso connection used in
+% # iNMDA_PYdr_PYso_B02: Normalized synaptic NMDAergic excitatory current FROM the
+%     pyramidal axo-soma TO pyramidal dendrite PYdr<-PYso_B02 connection used in
 %     the DynaSim implementation of (Bazhenov et al., 2002). Note that in the
-%     original code, the class for this current is called NMDA_D1, PYso are
+%     original code, the class for this current is called NMDA_D1, PYso_B02 are
 %     called CX or CX_SOMA, and PYdr are called CX or CX_DEND. Also note that,
 %     instead of using a Heaviside increase in transmitter concentration upon
 %     spike detection, we used the (1 + tanh(V/4)) formulation from (Ermentrout
@@ -25,23 +25,18 @@
 %         slow-wave sleep oscillations and transitions to activated states. The
 %         Journal of Neuroscience. 2002;22: 8691–8704.
 %
-% - Tags: synapse, connection, excitation, ampa
+% - Tags: synapse, connection, excitation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Parameters
 %
-% For the PYso to PYdr connection, the conductance is given by the original
-%     paper "absolutely" as 0.001 uS. We first need to normalize this value over
-%     the area of the target cell and convert the conductance to mS/cm^2. We do
-%     this by converting uS to mS and dividing by the area of the target PYdr
-%     compartments:
-%
-%    0.001 uS * (1 mS / 1000 uS) * (1 / (165*1e-6 cm^2) = 0.006 mS/cm^2
-%
 gNMDA = 0.006 % mS/cm^2
+
 ENMDA = 0    % mV
 
-sNMDAIC = 0.1
-sNMDANoiseIC = 0.1
+Rinf = 0.72
+
+sIC = 0
+sNoiseIC = 0
 
 % Note that alpha rate here corresponds to the inverse of the rise  time constant, 1/tauR, and
 %        the beta rate here corresponds to the inverse of the decay time constant, 1/tauD
@@ -66,19 +61,16 @@ removeRecurrentBool = 1
 % Note that what is passed is 2x the radius
 netcon = netconNearestNeighbors(2*radius, N_pre, N_post, removeRecurrentBool)
 
-% AES
 weirdFunction(voltage) = 1./(1+exp(-(voltage - (-25))./12.5))
 
-INMDA_PYdr_PYso(X,s) = -gNMDA/normalizingFactor.*(s*netcon).*weirdFunction(X).*(X-ENMDA)
+INMDA_PYdr_PYso_B02(X,s) = -gNMDA/normalizingFactor.*(s*netcon).*weirdFunction(X).*(X-ENMDA)
 
 % This way we record the synaptic currents!
-monitor INMDA_PYdr_PYso
-
+monitor INMDA_PYdr_PYso_B02
 
 % ODEs and ICs
-s' = alpha.*(1 + tanh(X_pre./4)).*(1-s) - beta.*s
-s(0) = sNMDAIC+sNMDANoiseIC.*rand(1,N_pre)
-
+s' = alpha.*Rinf.*0.5.*(1 + tanh(X_pre./4)).*(1-s) - beta.*s
+s(0) = sIC+sNoiseIC.*rand(1,N_pre)
 
 % Linker
-@current += INMDA_PYdr_PYso(X_post,s)
+@current += INMDA_PYdr_PYso_B02(X_post,s)

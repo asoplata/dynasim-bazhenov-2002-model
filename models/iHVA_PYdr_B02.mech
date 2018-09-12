@@ -1,4 +1,4 @@
-% # iHVA_PYdr: High-threshold Calcium current, Hodgkin-Huxley-style, for
+% # iHVA_PYdr_B02: High-threshold Calcium current, Hodgkin-Huxley-style, for
 %     generic pyramidal dendrite compartments used in the DynaSim
 %     implementation of (Bazhenov et al., 2002). Note that in the original
 %     code, this compartment/cell type is called CX or CX_DEND, and this
@@ -14,7 +14,7 @@
 %         slow-wave sleep oscillations and transitions to activated states. The
 %         Journal of Neuroscience. 2002;22: 8691–8704.
 %
-% - Exposes: @IHVA_PYdr calcium current as required by "CaBuffer_PYdr"
+% - Exposes: @IHVA_PYdr_B02 calcium current as required by "CaBuffer_PYdr_B02"
 %
 % - Tags: calcium, current, intrinsic, pyramidal, dendrite
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -44,9 +44,9 @@ tauH(X) = (1./(alphaH(X) + betaH(X)))./phiH
 Hinf(X) = alphaH(X)./(alphaH(X) + betaH(X))
 
 % Note: For why the current term was not made negative, see below.
-IHVA_PYdr(X,mHVA,hHVA) = phiM*gHVA.*mHVA.^2.*hHVA.*(X-EHVA)
+IHVA_PYdr_B02(X,mHVA,hHVA) = phiM*gHVA.*mHVA.^2.*hHVA.*(X-EHVA)
 
-monitor IHVA_PYdr
+monitor IHVA_PYdr_B02
 
 % ODEs and ICs
 mHVA' = (Minf(X)-mHVA)./tauM(X)
@@ -57,7 +57,7 @@ hHVA(0)=hHVAIC+hHVANoiseIC.*rand(1,Npop)
 % Interface
 % Note: Usually in DynaSim, the current is made negative before being assigned
 %     to a linker, but in this case, the below is less confusing since exposing
-%     IHVA_PYdr for the CaBuffer_PYdr mechanism requires a
-%     not-made-negative version of IHVA_PYdr.
-@current += -IHVA_PYdr(X,mHVA,hHVA)
-@IHVA_PYdr += IHVA_PYdr(X,mHVA,hHVA)
+%     IHVA_PYdr_B02 for the CaBuffer_PYdr_B02 mechanism requires a
+%     not-made-negative version of IHVA_PYdr_B02.
+@current += -IHVA_PYdr_B02(X,mHVA,hHVA)
+@IHVA_PYdr_B02 += IHVA_PYdr_B02(X,mHVA,hHVA)

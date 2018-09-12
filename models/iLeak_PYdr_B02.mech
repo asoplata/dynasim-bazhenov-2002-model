@@ -1,4 +1,4 @@
-% # iLeak_PYdr: Chloride/general Leak current, Hodgkin-Huxley-style, for
+% # iLeak_PYdr_B02: Chloride/general Leak current, Hodgkin-Huxley-style, for
 %     generic pyramidal dendrite compartments used in the DynaSim
 %     implementation of (Bazhenov et al., 2002). Note that in the original
 %     code, this compartment/cell type is called CX or CX_DEND, and this
@@ -25,9 +25,9 @@ gLeak = (1e3)/30000 % mS/cm^2
 ELeak = -68   % mV
 
 % Functions
-ILeak_PYdr(X) = -gLeak.*(X-ELeak)
+ILeak_PYdr_B02(X) = -gLeak.*(X-ELeak)
 
-monitor ILeak_PYdr
+monitor ILeak_PYdr_B02
 
 % Linker
-@current += ILeak_PYdr(X)
+@current += ILeak_PYdr_B02(X)

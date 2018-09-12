@@ -1,4 +1,4 @@
-% # iNaP_PYso: Persistent sodium current, Hodgkin-Huxley-style, for
+% # iNaP_PYso_B02: Persistent sodium current, Hodgkin-Huxley-style, for
 %     generic pyramidal soma compartments used in the DynaSim implementation of
 %     (Bazhenov et al., 2002). Note that in the original code, this
 %     compartment/cell type is called CX or CX_SOMA, and this current is called
@@ -30,25 +30,25 @@ mNaPNoiseIC = 0.1
 tauM = 0.8/phiM
 Minf(X) = 0.02./(1 + exp(-(X - -42)./5))
 
-% Instead of the PYso axo-somatic compartment calculating the dv/dt the normal
+% Instead of the PYso_B02 axo-somatic compartment calculating the dv/dt the normal
 %     way, they solve for just v using the "steady-state" values of the system.
 %     This means that we have to calculate different parts of the current/etc.
 %     differently:
 % Note that the below doesn't contain the voltage of the soma. This is
 %     analogous to the corresponding part of `g2_SOMA` in the original code:
-curr_NaP_PYso(X,mNaP) = gNaP.*mNaP.*ENaP
+curr_NaP_PYso_B02(X,mNaP) = gNaP.*mNaP.*ENaP
 
 % Note that the below doesn't contain any voltages. This is
 %     analogous to the corresponding part of `g1_SOMA` in the original code:
-cond_NaP_PYso(X,mNaP) = gNaP.*mNaP
+cond_NaP_PYso_B02(X,mNaP) = gNaP.*mNaP
 
-monitor curr_NaP_PYso
-monitor cond_NaP_PYso
+monitor curr_NaP_PYso_B02
+monitor cond_NaP_PYso_B02
 
 % ODEs and ICs
 mNaP' = (Minf(X)-mNaP)./tauM
 mNaP(0)=mNaPIC+mNaPNoiseIC.*rand(1,Npop)
 
 % Interface
-@current += curr_NaP_PYso(X,mNaP)
-@conductance += cond_NaP_PYso(X,mNaP)
+@current += curr_NaP_PYso_B02(X,mNaP)
+@conductance += cond_NaP_PYso_B02(X,mNaP)

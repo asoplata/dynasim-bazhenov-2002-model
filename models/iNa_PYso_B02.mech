@@ -1,4 +1,4 @@
-% # iNa_PYso: Fast sodium current for generic pyramidal soma
+% # iNa_PYso_B02: Fast sodium current for generic pyramidal soma
 %     compartments used in the DynaSim implementation of (Bazhenov et al.,
 %     2002). Note that in the original code, this compartment/cell type is
 %     called CX or CX_SOMA, and this current is called INa_CX.
@@ -61,20 +61,20 @@ Minf(X) = alphaM(X)./(alphaM(X) + betaM(X))
 tauH(X) = (1./(alphaH(X) + betaH(X)))./phiH
 Hinf(X) = 1./(1 + exp(((X-10) + 65)./6.2))
 
-% Instead of the PYso axo-somatic compartment calculating the dv/dt the normal
+% Instead of the PYso_B02 axo-somatic compartment calculating the dv/dt the normal
 %     way, they solve for just v using the "steady-state" values of the system.
 %     This means that we have to calculate different parts of the current/etc.
 %     differently:
 % Note that the below doesn't contain the voltage of the soma. This is
 %     analogous to the corresponding part of `g2_SOMA` in the original code:
-curr_Na_PYso(X,mNa,hNa) = phiM*gNa.*mNa.^3.*hNa.*ENa
+curr_Na_PYso_B02(X,mNa,hNa) = phiM*gNa.*mNa.^3.*hNa.*ENa
 
 % Note that the below doesn't contain any voltages. This is
 %     analogous to the corresponding part of `g1_SOMA` in the original code:
-cond_Na_PYso(X,mNa,hNa) = phiM*gNa.*mNa.^3.*hNa
+cond_Na_PYso_B02(X,mNa,hNa) = phiM*gNa.*mNa.^3.*hNa
 
-monitor curr_Na_PYso
-monitor cond_Na_PYso
+monitor curr_Na_PYso_B02
+monitor cond_Na_PYso_B02
 
 % ODEs and ICs
 mNa' = (Minf(X)-mNa)./tauM(X)
@@ -83,5 +83,5 @@ hNa' = (Hinf(X)-hNa)./tauH(X)
 hNa(0)=hNaIC+hNaNoiseIC.*rand(1, Npop)
 
 % Interface
-@current += curr_Na_PYso(X,mNa,hNa)
-@conductance += cond_Na_PYso(X,mNa,hNa)
+@current += curr_Na_PYso_B02(X,mNa,hNa)
+@conductance += cond_Na_PYso_B02(X,mNa,hNa)

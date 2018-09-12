@@ -1,4 +1,4 @@
-% # iLeak_INdr: Chloride/general Leak current, Hodgkin-Huxley-style, for
+% # iLeak_INdr_B02: Chloride/general Leak current, Hodgkin-Huxley-style, for
 %     generic interneuron dendrite compartments used in the DynaSim
 %     implementation of (Bazhenov et al., 2002). Note that in the original
 %     code, this compartment/cell type is called CX, CX_DEND, and sometimes IN,
@@ -20,14 +20,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Parameters
 gLeak = (1e3)/30000 % mS/cm^2
-% AES
-% ELeak = -68  % mV
 ELeak = -70  % mV
 
 % Functions
-ILeak_INdr(X) = -gLeak.*(X-ELeak)
+ILeak_INdr_B02(X) = -gLeak.*(X-ELeak)
 
-monitor ILeak_INdr
+monitor ILeak_INdr_B02
 
 % Linker
-@current += ILeak_INdr(X)
+@current += ILeak_INdr_B02(X)
