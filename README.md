@@ -20,9 +20,14 @@ extended model easy. Also note that this is NOT intended as a bit-perfect
 reproduction of the original model, but rather just an open-source, adequate
 reproduction of the overall qualitative results.
 
+NOTE: This must be run using a custom version of DynaSim (see below) and has
+only been tested for MATLAB 2017a. Let me know if you want to run it and I'll
+help!
+
 ## Install and Usage
 The easiest way to get started with this is:
-1. Install DynaSim (https://github.com/DynaSim/DynaSim/wiki/Installation),
+1. Install this custom version of DynaSim
+   (https://github.com/asoplata/DynaSim/tree/coupling_addition),
    including adding it to your MATLAB path.
 2. `git clone` or download this code's repo
    (https://github.com/asoplata/dynasim-bazhenov-2002-model) into
